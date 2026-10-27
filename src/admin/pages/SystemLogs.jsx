@@ -67,7 +67,7 @@ export default function SystemLogs() {
         <div>
           <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-3">
             <Shield className="text-patriotic-green" size={32} />
-            Logs do Sistema
+            Atividade do painel
           </h1>
           <p className="text-slate-500">Histórico completo de ações administrativas e alterações no CMS.</p>
         </div>
@@ -102,7 +102,7 @@ export default function SystemLogs() {
             <option value="all">Todas as Entidades</option>
             <option value="form">Formulários</option>
             <option value="post">Posts/Blog</option>
-            <option value="project">Projetos</option>
+            <option value="project">Portfólio</option>
             <option value="page">Páginas</option>
             <option value="user">Usuários</option>
           </select>

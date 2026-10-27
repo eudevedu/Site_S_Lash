@@ -184,7 +184,7 @@ export default function DesignSettings() {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Nome Completo do Candidato</label>
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Nome da marca / profissional</label>
                 <input 
                   type="text"
                   className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-patriotic-green/20"
@@ -244,7 +244,7 @@ export default function DesignSettings() {
                 </div>
                 <div className="flex flex-col">
                   <span className="text-white font-bold text-sm leading-none">{siteSettings.general?.name || 'Sabrina Araújo'}</span>
-                  <span className="text-[8px] text-slate-500 font-black uppercase tracking-widest mt-1">Candidato Estadual</span>
+                  <span className="text-[8px] text-slate-500 font-black uppercase tracking-widest mt-1">Lash Designer</span>
                 </div>
               </div>
 

@@ -40,7 +40,7 @@ export default function PostsList() {
   const fetchPosts = async () => {
     setLoading(true)
     try {
-      const data = await postsApi.getAll()
+      const data = await postsApi.getAll({ summary: true })
       setPosts(data || [])
     } catch (err) {
       console.error(err)
@@ -56,7 +56,7 @@ export default function PostsList() {
       await postsApi.delete(id)
       
       if (postToDelete) {
-        await logsApi.logAction('Excluiu notícia/post', 'post', id, { title: postToDelete.title, slug: postToDelete.slug })
+        await logsApi.logAction('Excluiu artigo/post', 'post', id, { title: postToDelete.title, slug: postToDelete.slug })
       }
 
       setPosts(posts.filter(p => p.id !== id))
@@ -78,8 +78,8 @@ export default function PostsList() {
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Notícias & Blog</h1>
-          <p className="text-slate-500">Comunique suas ações e opiniões para seus eleitores.</p>
+          <h1 className="text-3xl font-bold text-slate-900">Beauty journal</h1>
+          <p className="text-slate-500">Compartilhe orientações, novidades e inspiração sobre a beleza do olhar.</p>
         </div>
         
         <Link 
@@ -87,7 +87,7 @@ export default function PostsList() {
           className="flex items-center gap-2 px-6 py-3 bg-patriotic-green text-white rounded-xl font-bold hover:scale-[1.02] active:scale-95 transition-all shadow-lg"
         >
           <Plus size={20} />
-          Nova Notícia
+          Novo artigo
         </Link>
       </div>
 
@@ -143,7 +143,7 @@ export default function PostsList() {
                 <tr>
                   <td colSpan="5" className="px-6 py-12 text-center">
                     <Loader2 className="animate-spin mx-auto text-patriotic-green mb-2" size={32} />
-                    <p className="text-slate-500 font-medium">Carregando notícias...</p>
+                    <p className="text-slate-500 font-medium">Carregando artigos...</p>
                   </td>
                 </tr>
               ) : filteredPosts.length === 0 ? (
@@ -152,7 +152,7 @@ export default function PostsList() {
                     <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-300">
                       <Newspaper size={32} />
                     </div>
-                    <p className="text-slate-500 font-medium">Nenhuma notícia encontrada.</p>
+                    <p className="text-slate-500 font-medium">Nenhuma artigo encontrada.</p>
                   </td>
                 </tr>
               ) : (
@@ -163,7 +163,7 @@ export default function PostsList() {
                         <div className="absolute inset-0 z-10 bg-red-600 flex items-center justify-between px-6 text-white animate-in slide-in-from-right duration-200">
                           <div className="flex items-center gap-3">
                             <AlertTriangle size={20} />
-                            <span className="font-bold text-sm">Excluir esta notícia permanentemente?</span>
+                            <span className="font-bold text-sm">Excluir esta artigo permanentemente?</span>
                           </div>
                           <div className="flex gap-2">
                             <button 
@@ -186,7 +186,7 @@ export default function PostsList() {
                       <div className="flex items-center gap-3">
                         <div className="w-12 h-12 rounded-xl bg-slate-100 overflow-hidden flex-shrink-0 border border-slate-200">
                           {post.cover_image_url ? (
-                            <img src={post.cover_image_url} alt="" className="w-full h-full object-cover" />
+                            <img loading="lazy" decoding="async" src={post.cover_image_url} alt="" className="w-full h-full object-cover" />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center text-slate-400 bg-slate-50">
                               <Newspaper size={20} />

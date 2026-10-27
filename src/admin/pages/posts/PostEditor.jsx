@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, lazy, Suspense } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { postsApi } from '../../../lib/api/posts'
 import { categoriesApi } from '../../../lib/api/categories'
 import { logsApi } from '../../../lib/api/logs'
-import RichEditor from '../../components/editor/RichEditor'
+
 import ImageUploader from '../../components/ui/ImageUploader'
 import { Save, ChevronLeft, Globe, Eye, Settings, Plus, User, Calendar, Loader2 } from 'lucide-react'
 import slugify from 'slugify'
 import { supabase } from '../../../lib/supabase'
 import toast from 'react-hot-toast'
 import CategoryModal from '../../components/CategoryModal'
+
+const RichEditor = lazy(() => import('../../components/editor/RichEditor'))
 
 export default function PostEditor() {
   const { id } = useParams()
@@ -83,7 +85,7 @@ export default function PostEditor() {
         author_id: data.author_id || ''
       })
     } catch (err) {
-      console.error('Erro ao buscar notícia:', err)
+      console.error('Erro ao buscar artigo:', err)
     } finally {
       setFetching(false)
     }
@@ -102,7 +104,7 @@ export default function PostEditor() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
-    const toastId = toast.loading('Salvando notícia...')
+    const toastId = toast.loading('Salvando artigo...')
     try {
       // Destruir campos que não são colunas do banco
       const {
@@ -129,12 +131,12 @@ export default function PostEditor() {
 
       if (form.id) {
         await postsApi.update(form.id, postData)
-        await logsApi.logAction('Editou notícia/post', 'post', form.id, { title: postData.title })
-        toast.success('Notícia atualizada!', { id: toastId })
+        await logsApi.logAction('Editou artigo/post', 'post', form.id, { title: postData.title })
+        toast.success('Artigo atualizado!', { id: toastId })
       } else {
         const newPost = await postsApi.create(postData)
-        await logsApi.logAction('Criou nova notícia', 'post', newPost?.id, { title: postData.title })
-        toast.success('Notícia criada!', { id: toastId })
+        await logsApi.logAction('Criou nova artigo', 'post', newPost?.id, { title: postData.title })
+        toast.success('Artigo publicado!', { id: toastId })
       }
 
       navigate('/admin/posts')
@@ -168,7 +170,7 @@ export default function PostEditor() {
             </button>
             <div>
               <h2 className="text-2xl font-bold text-slate-800">
-                {id ? 'Editar Notícia' : 'Nova Notícia'}
+                {id ? 'Editar artigo' : 'Novo artigo'}
               </h2>
               <p className="text-sm text-slate-500">Preencha as informações abaixo.</p>
             </div>
@@ -210,17 +212,17 @@ export default function PostEditor() {
                   className="input-field min-h-[100px] py-3"
                   value={form.excerpt || ''}
                   onChange={(e) => setForm({ ...form, excerpt: e.target.value })}
-                  placeholder="Breve resumo da notícia para a listagem..."
+                  placeholder="Breve resumo da artigo para a listagem..."
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">Conteúdo</label>
-                <RichEditor
+                <Suspense fallback={<div className="studio-empty" role="status">Carregando editor…</div>}><RichEditor
                   value={form.content}
                   onChange={(content) => setForm({ ...form, content })}
-                  placeholder="Escreva o conteúdo da notícia aqui..."
-                />
+                  placeholder="Escreva o conteúdo da artigo aqui..."
+                /></Suspense>
               </div>
             </div>
 
@@ -361,7 +363,7 @@ export default function PostEditor() {
         onClose={() => setIsCategoryModalOpen(false)}
         onSave={handleQuickAddCategory}
         type="post"
-        title="Nova Categoria de Notícia"
+        title="Nova categoria do journal"
       />
     </>
   )

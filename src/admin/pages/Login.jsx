@@ -1,95 +1,32 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
+import { ArrowUpRight, ArrowLeft, LockKeyhole, AlertCircle, Eye, EyeOff } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
-import { LogIn, Lock, Mail, AlertCircle } from 'lucide-react'
+import { useSettings } from '../../context/SettingsContext'
+import { isSupabaseConfigured } from '../../lib/supabase'
 import { logsApi } from '../../lib/api/logs'
-
+import '../admin.css'
 export default function Login() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [email,setEmail] = useState('')
+  const [password,setPassword] = useState('')
+  const [showPassword,setShowPassword] = useState(false)
+  const [error,setError] = useState('')
+  const [loading,setLoading] = useState(false)
   const { login } = useAuth()
+  const { settings } = useSettings()
   const navigate = useNavigate()
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    setError(null)
-    
+  useEffect(() => { document.title = `Painel do estúdio | ${settings.general.name}` }, [settings.general.name])
+  async function handleSubmit(event) {
+    event.preventDefault()
+    if (!isSupabaseConfigured) { setError('Configure a conexão com o CMS para acessar o painel do estúdio.'); return }
+    setLoading(true); setError('')
     try {
-      const { error } = await login(email, password)
-      if (error) throw error
-      
-      await logsApi.logAction('Realizou login no sistema', 'user', null, { email })
-      
-      navigate('/admin')
-    } catch (err) {
-      setError('Credenciais inválidas. Verifique seu e-mail e senha.')
-    } finally {
-      setLoading(false)
-    }
+      const {error:authError} = await login(email,password)
+      if (authError) throw authError
+      logsApi.logAction('Acessou o painel do estúdio','user',null).catch(() => {})
+      navigate('/admin',{replace:true})
+    } catch { setError('Não foi possível entrar. Confira seu e-mail, sua senha e a conexão.') }
+    finally { setLoading(false) }
   }
-
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-900 px-4">
-      <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-[40px] shadow-2xl relative overflow-hidden">
-        {/* Decorative elements */}
-        <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-patriotic-green to-patriotic-yellow"></div>
-        
-        <div className="text-center">
-          <div className="mx-auto h-16 w-16 bg-patriotic-green/10 rounded-2xl flex items-center justify-center text-patriotic-green mb-6">
-            <LogIn size={32} />
-          </div>
-          <h2 className="text-3xl font-display font-black text-slate-900">Acesso Restrito</h2>
-          <p className="mt-2 text-sm text-slate-500 font-medium">
-            Entre com suas credenciais para gerenciar o portal
-          </p>
-        </div>
-
-        {error && (
-          <div className="bg-red-50 border border-red-100 text-red-600 px-4 py-3 rounded-2xl flex items-center gap-3 text-sm">
-            <AlertCircle size={20} />
-            {error}
-          </div>
-        )}
-
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="space-y-4">
-            <div className="relative">
-              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
-              <input
-                type="email"
-                required
-                className="input-field pl-12 h-14 bg-slate-50 border-none focus:bg-white"
-                placeholder="E-mail de acesso"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div className="relative">
-              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
-              <input
-                type="password"
-                required
-                className="input-field pl-12 h-14 bg-slate-50 border-none focus:bg-white"
-                placeholder="Sua senha"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full btn btn-primary h-14 rounded-2xl font-black uppercase tracking-widest text-sm shadow-xl hover:shadow-patriotic-green/30 disabled:opacity-50"
-          >
-            {loading ? 'Entrando...' : 'Entrar no Painel'}
-          </button>
-          
-        </form>
-      </div>
-    </div>
-  )
+  return <div className="studio-admin studio-login"><section className="studio-login-brand"><Link to="/" className="studio-login-logo"><span className="studio-monogram">{settings.general.shortName}</span><span>{settings.general.name}<small>LASH DESIGN</small></span></Link><div><span className="studio-eyebrow">POR TRÁS DE CADA DETALHE</span><h1>O cuidado começa<br/><em>nos bastidores.</em></h1><p>Um espaço para cuidar da sua marca, compartilhar seus trabalhos e inspirar novos olhares.</p></div><span className="studio-login-signature">BELEZA · CUIDADO · IDENTIDADE</span><span className="studio-login-art" aria-hidden="true">✧</span></section><main className="studio-login-form"><Link to="/" className="studio-back-link"><ArrowLeft size={16}/>Voltar ao portal</Link><div><span className="studio-login-icon"><LockKeyhole size={23} strokeWidth={1.5}/></span><span className="studio-eyebrow">PAINEL DO ESTÚDIO</span><h2>Bem-vinda ao<br/>seu espaço.</h2><p>Entre para gerenciar o portal de {settings.general.name}.</p>{!isSupabaseConfigured && <div className="studio-data-notice"><AlertCircle size={18}/><span>A conexão com o CMS ainda não foi configurada neste ambiente.</span></div>}{error && <div role="alert" className="studio-login-error"><AlertCircle size={18}/>{error}</div>}<form onSubmit={handleSubmit}><label htmlFor="admin-email">E-mail de acesso</label><input id="admin-email" type="email" autoComplete="username" placeholder="seu@email.com" required value={email} onChange={e=>setEmail(e.target.value)}/><label htmlFor="admin-password">Senha</label><div className="studio-password-field"><input id="admin-password" type={showPassword?'text':'password'} autoComplete="current-password" required placeholder="Sua senha de acesso" value={password} onChange={e=>setPassword(e.target.value)}/><button type="button" onClick={()=>setShowPassword(!showPassword)} aria-label={showPassword?'Ocultar senha':'Mostrar senha'} aria-pressed={showPassword}>{showPassword?<EyeOff size={18}/>:<Eye size={18}/>}</button></div><button className="studio-primary" disabled={loading}>{loading?'Entrando…':'Entrar no estúdio'}<ArrowUpRight size={18}/></button></form><small>Acesso exclusivo à equipe autorizada.</small></div><span className="studio-login-footer">{settings.general.name} · Gestão do portal</span></main></div>
 }

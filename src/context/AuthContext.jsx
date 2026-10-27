@@ -1,93 +1,52 @@
-import React, { createContext, useState, useEffect } from 'react'
-import { supabase } from '../lib/supabase'
-
+import React, { createContext, useState, useEffect, useCallback, useMemo } from 'react'
+import { supabase, isSupabaseConfigured } from '../lib/supabase'
+import { watchSession } from '../lib/authSession'
 export const AuthContext = createContext({})
-
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null)
-  const [profile, setProfile] = useState(null)
-  const [loading, setLoading] = useState(true)
-
-  const fetchProfile = async (userId) => {
-    try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .single()
-      
-      if (error) {
-        console.error('Erro ao buscar perfil:', error.message)
-        // Se não existir perfil, cria um padrão (opcional, ou apenas deixa nulo)
-        setProfile({ role: 'admin' }) // Fallback seguro
-      } else {
-        setProfile(data)
-      }
-    } catch (err) {
-      console.error('Erro no fetchProfile:', err)
-      setProfile({ role: 'admin' })
-    }
-  }
-
+  const [user,setUser] = useState(null)
+  const [sessionLoading,setSessionLoading] = useState(true)
+  const [sessionError,setSessionError] = useState(null)
+  const [profileState,setProfileState] = useState({userId:null,data:null,error:null})
+  const [profileVersion,setProfileVersion] = useState(0)
+  const userId = user?.id
   useEffect(() => {
-    const getSession = async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession()
-        const currentUser = session?.user ?? null
-        setUser(currentUser)
-        if (currentUser) {
-          await fetchProfile(currentUser.id)
-        }
-      } catch (err) {
-        console.error('Erro ao recuperar sessão:', err)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    getSession()
-
-    let subscription
-    try {
-      const { data } = supabase.auth.onAuthStateChange(async (_event, session) => {
-        try {
-          const currentUser = session?.user ?? null
-          setUser(currentUser)
-          if (currentUser) {
-            await fetchProfile(currentUser.id)
-          } else {
-            setProfile(null)
-          }
-        } catch (err) {
-          console.error('Erro no onAuthStateChange:', err)
-        } finally {
-          setLoading(false)
-        }
-      })
-      subscription = data?.subscription
-    } catch (err) {
-      console.error('Erro ao escutar mudanças de autenticação:', err)
-      setLoading(false)
-    }
-
-    return () => {
-      if (subscription) subscription.unsubscribe()
-    }
+    if (!isSupabaseConfigured) { setSessionLoading(false); return }
+    return watchSession(supabase.auth, nextUser => {
+      setUser(nextUser); setSessionError(null); setSessionLoading(false)
+    }, error => { setSessionError(error); setSessionLoading(false) })
   }, [])
-
-  const login = (email, password) => supabase.auth.signInWithPassword({ email, password })
-  const signUp = (email, password, metadata = {}) => supabase.auth.signUp({ 
-    email, 
-    password,
-    options: {
-      data: metadata
+  // Run API work after the auth callback has released Supabase's lock.
+  // Token refresh and tab focus with the same user ID do not reload the profile.
+  useEffect(() => {
+    if (!userId) { setProfileState({userId:null,data:null,error:null}); return }
+    let active = true
+    let finished = false
+    const controller = new AbortController()
+    setProfileState({userId:null,data:null,error:null})
+    const timer = setTimeout(() => {
+      if (!active) return
+      finished = true
+      controller.abort()
+      setProfileState({userId,data:null,error:new Error('O perfil demorou para responder. Tente novamente.')})
+    },12000)
+    async function loadProfile() {
+      try {
+        const {data,error} = await supabase.from('profiles').select('*').eq('id',userId).abortSignal(controller.signal).single()
+        if (error) throw error
+        if (active && !finished) setProfileState({userId,data,error:null})
+      } catch (error) { if (active && !finished) setProfileState({userId,data:null,error}) }
+      finally { clearTimeout(timer) }
     }
-  })
-  const logout = () => supabase.auth.signOut()
-
-  return (
-    <AuthContext.Provider value={{ user, profile, loading, login, signUp, logout, refreshProfile: () => user && fetchProfile(user.id) }}>
-      {children}
-    </AuthContext.Provider>
-  )
+    loadProfile()
+    return () => { active = false; clearTimeout(timer); controller.abort() }
+  }, [userId,profileVersion])
+  const refreshProfile = useCallback(() => setProfileVersion(value=>value+1),[])
+  const login = useCallback((email,password) => supabase.auth.signInWithPassword({email,password}),[])
+  const signUp = useCallback((email,password,metadata={}) => supabase.auth.signUp({email,password,options:{data:metadata}}),[])
+  const logout = useCallback(() => supabase.auth.signOut(),[])
+  const profile = profileState.userId === userId ? profileState.data : null
+  const loading = sessionLoading || Boolean(userId && profileState.userId !== userId)
+  const authError = sessionError || (profileState.userId === userId ? profileState.error : null)
+  const value = useMemo(()=>({user,profile,loading,authError,login,signUp,logout,refreshProfile}),[user,profile,loading,authError,login,signUp,logout,refreshProfile])
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

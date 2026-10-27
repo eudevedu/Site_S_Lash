@@ -1,0 +1,7 @@
+{"schema":"openai.presentation.layout/v5","unit":"px","slide":{"id":"sl/0quton","index":3,"layout":{"id":"ly/fed43ad8","name":"Blank"},"backgroundColor":"rgba(25,24,23,1)","position":{"left":0,"top":0,"width":1280,"height":720}},
+"elements":[
+{"id":"sh/porudwv2","kind":"textbox","name":"title","position":{"left":72,"top":72,"width":1130,"height":85},"text":"Seu trabalho no portfólio","style":{"fontSize":50,"typeface":"Georgia","color":"#F5F2EC","alignment":"left"},"geometry":"rect","lineWidth":0},
+{"id":"sh/ehgbehcf","kind":"textbox","name":"body","position":{"left":72,"top":231,"width":380,"height":170},"text":"Fotos dos resultados e publicações selecionadas do Instagram ajudam a apresentar o estilo do estúdio.","style":{"fontSize":28,"typeface":"Arial","color":"#C9BEAB","alignment":"left"},"geometry":"rect","lineWidth":0},
+{"id":"sh/fipc7md0","kind":"textbox","name":"detail","position":{"left":72,"top":449,"width":380,"height":120},"text":"Você escolhe os posts e reels por link e define a ordem de exibição.","style":{"fontSize":25,"typeface":"Arial","color":"#C9B494","alignment":"left"},"geometry":"rect","lineWidth":0},
+{"id":"im/wfyhcz2p","kind":"image","position":{"left":505,"top":180,"width":700,"height":492},"fit":"contain","alt":"Prévia da seleção de publicações do Instagram"}
+]}

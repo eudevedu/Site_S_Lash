@@ -24,10 +24,10 @@ import { logsApi } from '../../lib/api/logs'
 import ConfirmModal from '../components/ConfirmModal'
 
 const statusMap = {
-  new: { label: 'Novo', color: 'bg-blue-100 text-blue-700', icon: Clock },
-  contacted: { label: 'Contatado', color: 'bg-purple-100 text-purple-700', icon: MessageSquare },
-  qualified: { label: 'Qualificado', color: 'bg-emerald-100 text-emerald-700', icon: CheckCircle2 },
-  converted: { label: 'Convertido', color: 'bg-amber-100 text-amber-700', icon: CheckCircle2 },
+  new: { label: 'Novo interesse', color: 'bg-blue-100 text-blue-700', icon: Clock },
+  contacted: { label: 'Em conversa', color: 'bg-purple-100 text-purple-700', icon: MessageSquare },
+  qualified: { label: 'Interesse confirmado', color: 'bg-emerald-100 text-emerald-700', icon: CheckCircle2 },
+  converted: { label: 'Atendimento combinado', color: 'bg-amber-100 text-amber-700', icon: CheckCircle2 },
   archived: { label: 'Arquivado', color: 'bg-slate-100 text-slate-700', icon: Archive },
 }
 
@@ -167,7 +167,7 @@ export default function Leads() {
     
     const timestamp = new Date().toISOString().split('T')[0]
     link.setAttribute('href', url)
-    link.setAttribute('download', `leads-${timestamp}.csv`)
+    link.setAttribute('download', `contatos-${timestamp}.csv`)
     link.style.visibility = 'hidden'
     document.body.appendChild(link)
     link.click()
@@ -213,8 +213,8 @@ export default function Leads() {
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Leads & Contatos</h1>
-          <p className="text-slate-500">Gerencie as pessoas que entraram em contato pelo site.</p>
+          <h1 className="text-3xl font-bold text-slate-900">Contatos & interesses</h1>
+          <p className="text-slate-500">Acompanhe os interesses recebidos e as conversas sobre seus atendimentos.</p>
         </div>
         
         <div className="flex items-center gap-3">
@@ -304,7 +304,7 @@ export default function Leads() {
                 <tr>
                   <td colSpan="5" className="px-6 py-12 text-center">
                     <Loader2 className="animate-spin mx-auto text-patriotic-green mb-2" size={32} />
-                    <p className="text-slate-500 font-medium">Carregando leads...</p>
+                    <p className="text-slate-500 font-medium">Carregando contatos...</p>
                   </td>
                 </tr>
               ) : filteredLeads.length === 0 ? (
@@ -313,7 +313,7 @@ export default function Leads() {
                     <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-300">
                       <Users size={32} />
                     </div>
-                    <p className="text-slate-500 font-medium">Nenhum lead encontrado.</p>
+                    <p className="text-slate-500 font-medium">Nenhum contato encontrado.</p>
                   </td>
                 </tr>
               ) : (
@@ -428,7 +428,7 @@ export default function Leads() {
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={deleteLead}
-        title="Excluir Lead?"
+        title="Excluir contato?"
         description={`Tem certeza que deseja excluir o lead "${leadToDelete?.name}"? Esta ação não pode ser desfeita.`}
         confirmText="Excluir Agora"
         cancelText="Manter Lead"

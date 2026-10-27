@@ -119,9 +119,9 @@
 
 .gjs-pn-views .gjs-pn-btn.gjs-pn-active {
   background-color: #ffffff !important;
-  color: #006738 !important;
-  border-bottom: 2px solid #006738 !important;
-  box-shadow: inset 0 -2px 0 #006738 !important;
+  color: #9b815c !important;
+  border-bottom: 2px solid #9b815c !important;
+  box-shadow: inset 0 -2px 0 #9b815c !important;
   font-weight: bold !important;
 }
 
@@ -166,12 +166,12 @@
 }
 
 .gjs-block-label:hover {
-  color: #006738 !important;
+  color: #9b815c !important;
   background-color: #f8fafc !important;
 }
 
 .gjs-block-category.gjs-open .gjs-block-label {
-  color: #006738 !important;
+  color: #9b815c !important;
   border-bottom: 1px solid #f1f5f9 !important;
   background-color: #f8fafc !important;
 }
@@ -216,14 +216,14 @@
 }
 
 .gjs-block:hover svg, .gjs-block:hover .gjs-block__media svg {
-  fill: #006738 !important; /* Verde patriótico no hover */
+  fill: #9b815c !important; /* Destaque da identidade do estúdio */
   transform: scale(1.1) !important;
 }
 
 .gjs-block:hover {
   border-color: transparent !important;
-  color: #006738 !important;
-  background-color: #0067380a !important;
+  color: #9b815c !important;
+  background-color: #9b815c0a !important;
   transform: translateY(-4px) !important;
   box-shadow: 0 10px 20px -5px rgba(0, 103, 56, 0.1) !important;
 }

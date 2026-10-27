@@ -148,7 +148,7 @@ export default function CategoriesList() {
           className={`flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold transition-all ${activeType === 'project' ? 'bg-white text-patriotic-green shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
         >
           <Briefcase size={18} />
-          Projetos
+          Portfólio
         </button>
       </div>
 
@@ -261,8 +261,8 @@ export default function CategoriesList() {
                   value={formData.type}
                   onChange={(e) => setFormData({...formData, type: e.target.value})}
                 >
-                  <option value="post">Notícias / Posts</option>
-                  <option value="project">Projetos / Portfólio</option>
+                  <option value="post">Artigos / Journal</option>
+                  <option value="project">Trabalhos / Portfólio</option>
                 </select>
               </div>
 

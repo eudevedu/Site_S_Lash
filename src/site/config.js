@@ -13,9 +13,11 @@ export const defaultSettings = {
   nav: { sticky: true, showContactButton: true, contactButtonText: 'Agendar horário', contactButtonLink: '/agendar' },
   projects: { subtitle: 'Arte em cada fio', title: 'Olhares que inspiram.', titleAccent: 'inspiram.', listTitle: 'Portfólio de olhares', listDescription: 'Conheça os trabalhos e detalhes das técnicas de lash design.' },
   blog: { subtitle: 'Beauty journal', title: 'Seu momento de leitura.', listTitle: 'Cuidados & inspiração', listDescription: 'Dicas, novidades e cuidados para valorizar o seu olhar.' },
-  about: { title: 'Sabrina Araújo', subtitle: 'A beleza está nos detalhes. E o seu olhar merece uma atenção especial.', badgeTitle: 'Lash Design', badgeDescription: 'Um olhar único, como você.', content: '<p>Este é um espaço dedicado à beleza do olhar. Conheça as possibilidades do lash design e converse sobre a técnica que mais combina com o seu estilo.</p>' },
-  footer: { links: [{ label: 'Sobre', url: '/sobre' }, { label: 'Portfólio', url: '/portfolio' }, { label: 'Journal', url: '/blog' }], showTransparencyLink: false },
+  about: { eyebrow: 'Por trás de cada olhar', storyTitle: 'Um olhar único. Uma beleza que é sua.', mission: 'Valorizar a expressão de cada olhar, respeitando a individualidade e o estilo de cada pessoa.', values: 'Escuta, atenção aos detalhes e escolhas conscientes para uma beleza com identidade.', purpose: 'Fazer do cuidado com o olhar um momento de conexão com a sua própria beleza.', ctaTitle: 'Vamos descobrir o seu próximo olhar?', ctaDescription: 'Conte o que você procura, conheça as possibilidades e converse sobre o atendimento que combina com você.', ctaButton: 'Agende seu momento', title: 'Sabrina Araújo', subtitle: 'A beleza está nos detalhes. E o seu olhar merece uma atenção especial.', badgeTitle: 'Lash Design', badgeDescription: 'Um olhar único, como você.', content: '<p>Este é um espaço dedicado à beleza do olhar. Conheça as possibilidades do lash design e converse sobre a técnica que mais combina com o seu estilo.</p>' },
+  footer: { links: [{ label: 'Sobre', url: '/sobre' }, { label: 'Serviços', url: '/servicos' }, { label: 'Portfólio', url: '/portfolio' }, { label: 'Journal', url: '/blog' }], showTransparencyLink: false },
   leadForm: {}, stats: [],
+  portfolioInstagram: { enabled: false, title: 'Olhares no Instagram', posts: [] },
+  servicesPage: { eyebrow: 'Serviços & cuidado', title: 'Um cuidado pensado para o seu olhar.', description: 'Conheça as opções do estúdio e escolha como você quer valorizar a sua beleza.', sectionTitle: 'Encontre o seu próximo cuidado.', note: 'Consulte a disponibilidade dos atendimentos e confirme os detalhes diretamente com o estúdio.' },
   services: [
     { name: 'Clássico fio a fio', tag: 'LEVE & NATURAL', description: 'Definição delicada para quem ama um olhar realçado com naturalidade.' },
     { name: 'Volume brasileiro', tag: 'MARCA PRESENÇA', description: 'Textura e volume para um olhar expressivo, com um acabamento cheio de personalidade.' },
@@ -26,6 +28,9 @@ export function mergeSettings(data = {}) {
   const result = { ...defaultSettings, ...data }
   for (const key of Object.keys(defaultSettings)) {
     if (!Array.isArray(defaultSettings[key])) result[key] = { ...defaultSettings[key], ...data[key] }
+  }
+  for (const key of Object.keys(defaultSettings.general)) {
+    if (!result.general[key]?.trim()) result.general[key] = defaultSettings.general[key]
   }
   return result
 }

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, lazy, Suspense } from 'react'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import { projectsApi } from '../../../lib/api/projects'
 import { categoriesApi } from '../../../lib/api/categories'
 import { logsApi } from '../../../lib/api/logs'
-import RichEditor from '../../components/editor/RichEditor'
+
 import ImageUploader from '../../components/ui/ImageUploader'
 import { 
   Save, 
@@ -24,6 +24,8 @@ import slugify from 'slugify'
 
 import toast from 'react-hot-toast'
 import CategoryModal from '../../components/CategoryModal'
+
+const RichEditor = lazy(() => import('../../components/editor/RichEditor'))
 
 export default function ProjectEditor() {
   const { id } = useParams()
@@ -118,7 +120,7 @@ export default function ProjectEditor() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setSaving(true)
-    const toastId = toast.loading('Salvando projeto...')
+    const toastId = toast.loading('Salvando trabalho…')
     
     // Sanitize data: only send columns that exist in the database
     const saveData = {
@@ -139,11 +141,11 @@ export default function ProjectEditor() {
       if (isEditing) {
         await projectsApi.update(id, saveData)
         await logsApi.logAction('Editou projeto', 'project', id, { title: saveData.title })
-        toast.success('Projeto atualizado com sucesso!', { id: toastId })
+        toast.success('Trabalho atualizado com sucesso!', { id: toastId })
       } else {
         const newProject = await projectsApi.create(saveData)
         await logsApi.logAction('Criou novo projeto', 'project', newProject?.id, { title: saveData.title })
-        toast.success('Projeto criado com sucesso!', { id: toastId })
+        toast.success('Trabalho publicado no portfólio!', { id: toastId })
         navigate(`/admin/projects/edit/${newProject.id}`, { replace: true })
       }
     } catch (err) {
@@ -176,9 +178,9 @@ export default function ProjectEditor() {
             </Link>
             <div>
               <h1 className="text-2xl font-bold text-slate-900">
-                {isEditing ? 'Editar Projeto' : 'Novo Projeto'}
+                {isEditing ? 'Editar trabalho' : 'Novo trabalho'}
               </h1>
-              <p className="text-sm text-slate-500">Documente suas conquistas para o público.</p>
+              <p className="text-sm text-slate-500">Apresente a técnica, o efeito e os detalhes deste olhar.</p>
             </div>
           </div>
 
@@ -198,7 +200,7 @@ export default function ProjectEditor() {
               className="flex items-center gap-2 px-8 py-3 bg-patriotic-green text-white rounded-xl font-bold hover:scale-[1.02] active:scale-95 transition-all shadow-lg disabled:opacity-70"
             >
               {saving ? <Loader2 className="animate-spin" size={20} /> : <Save size={20} />}
-              Salvar Projeto
+              Salvar trabalho
             </button>
           </div>
         </div>
@@ -208,7 +210,7 @@ export default function ProjectEditor() {
           <div className="lg:col-span-2 space-y-6">
             <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6">
               <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-700">Título do Projeto / Obra</label>
+                <label className="text-sm font-bold text-slate-700">Nome do trabalho / técnica</label>
                 <input
                   type="text"
                   required
@@ -240,17 +242,17 @@ export default function ProjectEditor() {
                   className="w-full px-4 py-3 bg-slate-50 border-2 border-transparent focus:border-patriotic-green focus:bg-white rounded-xl outline-none transition-all resize-none"
                   value={form.description || ''}
                   onChange={(e) => setForm({ ...form, description: e.target.value })}
-                  placeholder="Um breve resumo do projeto para a listagem..."
+                  placeholder="Ex.: um olhar delicado com a técnica fio a fio."
                 />
               </div>
 
               <div className="space-y-2">
                 <label className="text-sm font-bold text-slate-700">Detalhes Completos</label>
-                <RichEditor 
+                <Suspense fallback={<div className="studio-empty" role="status">Carregando editor…</div>}><RichEditor
                   value={form.content} 
                   onChange={(content) => setForm({ ...form, content })} 
-                  placeholder="Descreva o projeto, o impacto social, o investimento, etc..."
-                />
+                  placeholder="Descreva a técnica aplicada, o efeito escolhido e os detalhes do acabamento."
+                /></Suspense>
               </div>
             </div>
 
@@ -354,7 +356,7 @@ export default function ProjectEditor() {
               <ImageUploader 
                 value={form.cover_image_url} 
                 onChange={(url) => setForm({ ...form, cover_image_url: url })} 
-                label="Capa do Projeto"
+                label="Foto do resultado"
               />
               <p className="text-[10px] text-slate-400 mt-4 text-center">Recomendado: 1200x800px (JPG ou PNG)</p>
             </div>
@@ -367,7 +369,7 @@ export default function ProjectEditor() {
         onClose={() => setIsCategoryModalOpen(false)}
         onSave={handleQuickAddCategory}
         type="project"
-        title="Nova Categoria de Projeto"
+        title="Nova categoria do portfólio"
       />
     </>
   )

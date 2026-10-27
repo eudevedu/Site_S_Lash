@@ -1,11 +1,11 @@
 import { supabase } from '../supabase'
 
 export const postsApi = {
-  async getAll({ status, categoryId, limit = 100 } = {}) {
+  async getAll({ status, categoryId, limit = 100, summary = false } = {}) {
     const buildQuery = (withAuthors = true) => {
       let q = supabase
         .from('posts')
-        .select(withAuthors ? '*, categories(name, slug), authors(name, avatar_url)' : '*, categories(name, slug)')
+        .select(summary ? 'id,title,slug,excerpt,cover_image_url,status,created_at,categories(name,slug)' : withAuthors ? '*, categories(name, slug), authors(name, avatar_url)' : '*, categories(name, slug)')
         .order('created_at', { ascending: false })
       if (status) q = q.eq('status', status)
       if (categoryId) q = q.eq('category_id', categoryId)
@@ -18,6 +18,7 @@ export const postsApi = {
       if (!error) return data
       throw error
     } catch (err) {
+      if (summary || (err.code !== 'PGRST200' && !/relationship.*authors|authors.*relationship/i.test(err.message || ''))) throw err
       const { data, error } = await buildQuery(false)
       if (error) throw error
       return data
@@ -36,6 +37,7 @@ export const postsApi = {
       if (!error) return data
       throw error
     } catch (err) {
+      if (err.code !== 'PGRST200' && !/relationship.*authors|authors.*relationship/i.test(err.message || '')) throw err
       // Fallback: busca sem autores se a relação não existir
       const { data, error } = await supabase
         .from('posts')
@@ -59,6 +61,7 @@ export const postsApi = {
       if (!error) return data
       throw error
     } catch (err) {
+      if (err.code !== 'PGRST200' && !/relationship.*authors|authors.*relationship/i.test(err.message || '')) throw err
       // Fallback: busca sem autores
       const { data, error } = await supabase
         .from('posts')

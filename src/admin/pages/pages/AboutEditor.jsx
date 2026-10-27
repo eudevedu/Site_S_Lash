@@ -1,225 +1,54 @@
 import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { 
-  Save, 
-  Layout, 
-  Loader2, 
-  CheckCircle2, 
-  AlertCircle, 
-  ArrowLeft,
-  Type,
-  AlignLeft,
-  Heart
-} from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { Save, ArrowLeft, ExternalLink, CheckCircle2, AlertCircle } from 'lucide-react'
 import { settingsApi } from '../../../lib/api/settings'
 import { logsApi } from '../../../lib/api/logs'
 import { useSettings } from '../../../context/SettingsContext'
 import ImageUploader from '../../components/ui/ImageUploader'
 
+const presentationFields = [
+  ['eyebrow','Chamada acima do título','Ex.: Por trás de cada olhar'],
+  ['title','Título da página','Ex.: Sabrina Araújo'],
+  ['subtitle','Frase de apresentação','Ex.: A beleza está nos detalhes.'],
+  ['storyTitle','Título da seção de apresentação','Ex.: Um olhar único. Uma beleza que é sua.'],
+]
+const principleFields = [['mission','Nossa missão'],['values','O que nos guia / Valores'],['purpose','Nosso propósito']]
+const bookingFields = [
+  ['ctaTitle','Título do convite','Ex.: Vamos descobrir o seu próximo olhar?'],
+  ['ctaDescription','Descrição do convite','Converse sobre as possibilidades do atendimento.'],
+  ['ctaButton','Texto do botão','Ex.: Agende seu momento'],
+]
 export default function AboutEditor() {
-  const navigate = useNavigate()
-  const { settings: currentSettings, refreshSettings } = useSettings()
-  const [isInitialized, setIsInitialized] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [saving, setSaving] = useState(false)
-  const [message, setMessage] = useState(null)
-  const [formData, setFormData] = useState({
-    about: {
-      title: '',
-      subtitle: '',
-      content: '',
-      image_url: '',
-      mission: '',
-      values: '',
-      purpose: '',
-      badgeTitle: '',
-      badgeDescription: ''
-    }
-  })
-
-  useEffect(() => {
-    if (currentSettings?.about && !isInitialized) {
-      setFormData({
-        about: {
-          title: currentSettings.about.title || '',
-          subtitle: currentSettings.about.subtitle || '',
-          content: currentSettings.about.content || '',
-          image_url: currentSettings.about.image_url || '',
-          mission: currentSettings.about.mission || '',
-          values: currentSettings.about.values || '',
-          purpose: currentSettings.about.purpose || '',
-          badgeTitle: currentSettings.about.badgeTitle || '',
-          badgeDescription: currentSettings.about.badgeDescription || ''
-        }
-      })
-      setIsInitialized(true)
-    }
-  }, [currentSettings, isInitialized])
-
-  const handleInputChange = (section, field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [section]: {
-        ...prev[section],
-        [field]: value
-      }
-    }))
-  }
-
-  const handleSave = async (e) => {
-    if (e) e.preventDefault()
-    setSaving(true)
-    setMessage(null)
-    
+  const { settings, loading, refreshSettings } = useSettings()
+  const [draft,setDraft] = useState(settings.about)
+  const [dirty,setDirty] = useState(false)
+  const [saving,setSaving] = useState(false)
+  const [message,setMessage] = useState(null)
+  useEffect(() => { if (!dirty && !saving) setDraft(settings.about) }, [settings.about,dirty,saving])
+  function update(field,value) { setDirty(true); setMessage(null); setDraft(current => ({...current,[field]:value})) }
+  async function save(event) {
+    event.preventDefault()
+    setSaving(true); setMessage(null)
     try {
-      await settingsApi.update('about', formData.about)
-      setMessage({ type: 'success', text: 'Página Sobre atualizada com sucesso!' })
-      alert('Página Sobre salva com sucesso no banco de dados!')
-      
-      // Run secondary updates and audit logging in the background without blocking the UI
-      refreshSettings()
-      logsApi.logAction('Atualizou Página Sobre', 'page', 'about')
-    } catch (err) {
-      console.error('Erro detalhado ao salvar Página Sobre:', err)
-      alert('Erro ao salvar no banco de dados:\n' + (err.message || err.description || JSON.stringify(err)))
-      setMessage({ type: 'error', text: 'Erro ao salvar alterações.' })
-    } finally {
-      setSaving(false)
-      setTimeout(() => setMessage(null), 5000)
-    }
+      await settingsApi.update('about',{...settings.about,...draft})
+      await refreshSettings()
+      setDirty(false)
+      setMessage({type:'success',text:'Página Sobre atualizada. Abra o portal para conferir.'})
+      logsApi.logAction('Atualizou apresentação do estúdio','page','about').catch(() => {})
+    } catch { setMessage({type:'error',text:'Não foi possível salvar. Suas alterações continuam no editor; verifique a conexão e tente novamente.'}) }
+    finally { setSaving(false) }
   }
-
-  if (!currentSettings && !loading) {
-    return (
-      <div className="flex items-center justify-center h-[400px]">
-        <Loader2 className="animate-spin text-patriotic-green" size={40} />
-      </div>
-    )
+  function fields(items) {
+    return items.map(([field,label,placeholder]) => <label key={field} className="block text-sm text-slate-600">{label}<input className="input-field mt-2" value={draft[field] || ''} placeholder={placeholder} onChange={event => update(field,event.target.value)}/></label>)
   }
-
-  return (
-    <div className="space-y-8 animate-in fade-in duration-500 max-w-4xl mx-auto">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <button 
-            onClick={() => navigate('/admin/pages')}
-            className="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500"
-          >
-            <ArrowLeft size={24} />
-          </button>
-          <div>
-            <h1 className="text-3xl font-bold text-slate-900">Editar Página Sobre</h1>
-            <p className="text-slate-500">Edite sua biografia, história e foto de perfil de forma simplificada.</p>
-          </div>
-        </div>
-        
-        <div className="flex items-center gap-4">
-          {message && (
-            <div className={`flex items-center gap-2 px-4 py-2 rounded-lg border animate-in fade-in slide-in-from-right-4 ${
-              message.type === 'success' ? 'bg-emerald-50 border-emerald-200 text-emerald-700' : 'bg-red-50 border-red-200 text-red-700'
-            }`}>
-              {message.type === 'success' ? <CheckCircle2 size={18} /> : <AlertCircle size={18} />}
-              <span className="text-sm font-medium">{message.text}</span>
-            </div>
-          )}
-          
-          <button
-            onClick={handleSave}
-            disabled={saving}
-            className="flex items-center gap-2 px-6 py-3 bg-patriotic-green text-white rounded-xl font-bold hover:scale-[1.02] active:scale-95 transition-all shadow-lg disabled:opacity-50"
-          >
-            {saving ? <Loader2 className="animate-spin" size={20} /> : <Save size={20} />}
-            Salvar Alterações
-          </button>
-        </div>
-      </div>
-
-      <div className="bg-white rounded-[32px] shadow-sm border border-slate-200 overflow-hidden text-left">
-        <div className="p-8 md:p-12">
-          <form onSubmit={handleSave} className="space-y-8">
-            <div className="space-y-8">
-              <div className="grid grid-cols-1 gap-6">
-                <div className="space-y-2">
-                  <label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1 flex items-center gap-2">
-                    <Type size={14} /> Título da Página
-                  </label>
-                  <input 
-                    type="text" 
-                    value={formData.about.title || ''}
-                    onChange={(e) => handleInputChange('about', 'title', e.target.value)}
-                    className="w-full p-4 rounded-2xl bg-slate-50 border border-slate-100 focus:bg-white focus:ring-2 focus:ring-patriotic-green/20 focus:border-patriotic-green outline-none transition-all font-bold text-lg"
-                    placeholder="Ex: Sobre Assur Mesquita"
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1 flex items-center gap-2">
-                    <Layout size={14} /> Subtítulo
-                  </label>
-                  <input 
-                    type="text" 
-                    value={formData.about.subtitle || ''}
-                    onChange={(e) => handleInputChange('about', 'subtitle', e.target.value)}
-                    className="w-full p-4 rounded-2xl bg-slate-50 border border-slate-100 focus:bg-white focus:ring-2 focus:ring-patriotic-green/20 focus:border-patriotic-green outline-none transition-all font-medium"
-                    placeholder="Ex: Conheça nossa trajetória..."
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1 flex items-center gap-2">
-                  <AlignLeft size={14} /> História / Biografia (Texto)
-                </label>
-                <textarea 
-                  value={formData.about.content || ''}
-                  onChange={(e) => handleInputChange('about', 'content', e.target.value)}
-                  className="w-full p-6 rounded-3xl bg-slate-50 border border-slate-100 focus:bg-white focus:ring-2 focus:ring-patriotic-green/20 focus:border-patriotic-green outline-none transition-all font-medium min-h-[400px] leading-relaxed"
-                  placeholder="Escreva aqui sua biografia completa..."
-                />
-                <p className="text-[10px] text-slate-400 italic">Dica: O texto será formatado automaticamente com parágrafos no site.</p>
-              </div>
-
-              <div className="pt-4 border-t border-slate-100 space-y-6">
-                <h4 className="font-bold text-slate-800 text-sm flex items-center gap-2">
-                  <Heart size={16} className="text-red-500" />
-                  Emblema Lateral da Foto (Destaque)
-                </h4>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Título do Emblema</label>
-                    <input 
-                      type="text" 
-                      value={formData.about.badgeTitle || ''}
-                      onChange={(e) => handleInputChange('about', 'badgeTitle', e.target.value)}
-                      className="w-full p-4 rounded-2xl bg-slate-50 border border-slate-100 focus:bg-white focus:ring-2 focus:ring-patriotic-green/20 focus:border-patriotic-green outline-none transition-all font-semibold"
-                      placeholder="Ex: Compromisso Real"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Descrição do Emblema</label>
-                    <input 
-                      type="text" 
-                      value={formData.about.badgeDescription || ''}
-                      onChange={(e) => handleInputChange('about', 'badgeDescription', e.target.value)}
-                      className="w-full p-4 rounded-2xl bg-slate-50 border border-slate-100 focus:bg-white focus:ring-2 focus:ring-patriotic-green/20 focus:border-patriotic-green outline-none transition-all text-sm font-medium"
-                      placeholder="Dedicação total à nossa gente e ao futuro da região."
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-4 border-t border-slate-100">
-                <ImageUploader 
-                  label="Foto de Perfil / Biografia"
-                  value={formData.about.image_url}
-                  onChange={(url) => handleInputChange('about', 'image_url', url)}
-                />
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  )
+  return <form className="max-w-5xl mx-auto space-y-6" onSubmit={save}>
+    <div className="studio-page-heading"><div><Link to="/admin/pages" className="studio-back-link"><ArrowLeft size={15}/>Voltar às páginas</Link><h1>Sobre o estúdio</h1><p>Conte a história da sua marca e apresente o cuidado por trás de cada olhar.</p></div><div className="flex gap-3 items-center"><a href="/sobre" target="_blank" rel="noreferrer" className="studio-view-site">Ver página<ExternalLink size={15}/></a><button type="submit" className="studio-primary" disabled={saving || loading}><Save size={16}/>{saving?'Salvando…':'Salvar alterações'}</button></div></div>
+    {message && <div role={message.type === 'error'?'alert':'status'} className={message.type === 'error'?'studio-login-error':'studio-data-notice'}>{message.type === 'error'?<AlertCircle size={18}/>:<CheckCircle2 size={18}/>}<span>{message.text}</span></div>}
+    <fieldset disabled={saving || loading} className="grid lg:grid-cols-[1.35fr_1fr] gap-6">
+      <div className="space-y-6"><section className="studio-panel space-y-5"><div className="studio-section-heading"><div><span className="studio-eyebrow">01 / PRIMEIRA IMPRESSÃO</span><h2>Apresentação</h2></div></div>{fields(presentationFields)}<label className="block text-sm text-slate-600">História / Biografia<textarea className="input-field mt-2 min-h-[260px]" value={draft.content || ''} onChange={event=>update('content',event.target.value)} placeholder="Conte sua história, seu estilo de trabalho e o que deseja transmitir a quem chega ao estúdio."/></label><p className="text-xs text-slate-500 leading-relaxed">Separe os parágrafos com uma linha em branco. Conteúdos HTML já cadastrados são preservados. Se a biografia ou a frase de apresentação ficarem vazias, o portal exibe o texto padrão de Lash Design.</p></section>
+      <section className="studio-panel space-y-5"><div className="studio-section-heading"><div><span className="studio-eyebrow">02 / ESSÊNCIA DA MARCA</span><h2>O que dá sentido ao cuidado</h2></div></div>{principleFields.map(([field,label]) => <label className="block text-sm text-slate-600" key={field}>{label}<textarea rows={3} className="input-field mt-2" value={draft[field] || ''} onChange={event=>update(field,event.target.value)}/></label>)}<p className="text-xs text-slate-500">Deixe um campo vazio para ocultar esse bloco no site.</p></section></div>
+      <div className="space-y-6"><section className="studio-panel space-y-5"><div className="studio-section-heading"><div><span className="studio-eyebrow">03 / IDENTIDADE</span><h2>Foto & assinatura</h2></div></div><ImageUploader label="Foto da profissional / estúdio" value={draft.image_url || ''} onChange={url=>update('image_url',url)}/><p className="text-xs text-slate-500 leading-relaxed">Prefira uma foto vertical. Sem imagem, a página apresenta o monograma da marca.</p>{fields([['badgeTitle','Título da assinatura','Ex.: Lash Design'],['badgeDescription','Frase da assinatura','Ex.: Um olhar único, como você.']])}</section><section className="studio-panel space-y-5"><div className="studio-section-heading"><div><span className="studio-eyebrow">04 / PRÓXIMO PASSO</span><h2>Convite ao atendimento</h2></div></div>{fields(bookingFields)}<p className="text-xs text-slate-500 leading-relaxed">O botão abre a página de agendamento e os canais de atendimento já configurados no portal.</p></section></div>
+    </fieldset>
+    {dirty && <p className="text-xs text-slate-500" role="status">Você tem alterações ainda não salvas.</p>}
+  </form>
 }

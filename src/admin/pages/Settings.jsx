@@ -22,6 +22,7 @@ import { createClient } from '@supabase/supabase-js'
 import { logsApi } from '../../lib/api/logs'
 import toast from 'react-hot-toast'
 import ConfirmModal from '../components/ConfirmModal'
+import { canManageUsers, canDeleteUser } from '../../lib/permissions'
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
@@ -29,6 +30,7 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 export default function Settings() {
   const navigate = useNavigate()
   const { user, profile } = useAuth()
+  const mayManageUsers = canManageUsers(profile)
   const [activeTab, setActiveTab] = useState('users')
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
@@ -47,6 +49,7 @@ export default function Settings() {
   // Delete Modal State
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [userToDelete, setUserToDelete] = useState(null)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   useEffect(() => {
     fetchUsers()
@@ -72,6 +75,7 @@ export default function Settings() {
 
   const handleCreateUser = async (e) => {
     e.preventDefault()
+    if (!mayManageUsers) { toast.error('Apenas Super Admins podem gerenciar usuários.'); return }
     setIsCreating(true)
     const toastId = toast.loading('Criando usuário e enviando convite...')
 
@@ -111,7 +115,7 @@ export default function Settings() {
 
       toast.success('Usuário convidado com sucesso! Verifique o e-mail.', { id: toastId })
       setIsModalOpen(false)
-      setNewUser({ email: '', password: '', full_name: '' })
+      setNewUser({ email: '', password: '', full_name: '', role: 'admin' })
       fetchUsers()
     } catch (err) {
       console.error(err)
@@ -122,7 +126,11 @@ export default function Settings() {
   }
 
   const handleDeleteUser = async () => {
-    if (!userToDelete) return
+    if (!userToDelete || isDeleting) return
+    if (!canDeleteUser(profile, user?.id, userToDelete.id)) {
+      toast.error('Apenas Super Admins podem remover outras contas. A própria conta não pode ser removida.'); return
+    }
+    setIsDeleting(true)
     
     const toastId = toast.loading('Removendo acesso completo...')
     try {
@@ -133,20 +141,24 @@ export default function Settings() {
       
       if (error) throw error
       
-      await logsApi.logAction('Removeu usuário permanentemente', 'user', userToDelete.id, { email: userToDelete.email, name: userToDelete.full_name })
-
-      setUsers(users.filter(u => u.id !== userToDelete.id))
+      setUsers(current => current.filter(u => u.id !== userToDelete.id))
       toast.success('Usuário removido permanentemente!', { id: toastId })
       setUserToDelete(null)
       setIsDeleteModalOpen(false)
     } catch (err) {
       console.error(err)
-      toast.error('Erro ao remover usuário: ' + err.message, { id: toastId })
+      const legacyPermissionError = /apenas administradores podem remover/i.test(err.message || '')
+      toast.error(legacyPermissionError && mayManageUsers
+        ? 'Sua conta é Super Admin, mas o banco ainda usa uma validação antiga. Atualize a função de permissões do CMS.'
+        : 'Erro ao remover usuário: ' + err.message, { id: toastId })
+    } finally {
+      setIsDeleting(false)
     }
   }
 
-  const handleDeleteClick = (user) => {
-    setUserToDelete(user)
+  const handleDeleteClick = (targetUser) => {
+    if (!canDeleteUser(profile, user?.id, targetUser.id) || isDeleting) return
+    setUserToDelete(targetUser)
     setIsDeleteModalOpen(true)
   }
 
@@ -211,6 +223,8 @@ export default function Settings() {
                 
                 <button 
                   className="flex items-center gap-2 px-4 py-2 bg-patriotic-green text-white rounded-xl font-bold hover:scale-[1.02] active:scale-95 transition-all shadow-lg"
+                  disabled={!mayManageUsers}
+                  title={!mayManageUsers ? 'Apenas Super Admins podem gerenciar usuários.' : undefined}
                   onClick={() => setIsModalOpen(true)}
                 >
                   <UserPlus size={18} />
@@ -269,14 +283,16 @@ export default function Settings() {
                               <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">
                                 Você
                               </span>
-                            ) : (
+                            ) : mayManageUsers ? (
                               <button 
                                 onClick={() => handleDeleteClick(u)}
+                                disabled={isDeleting}
+                                aria-label={`Remover ${u.full_name || 'usuário'}`}
                                 className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
                               >
                                 <Trash2 size={18} />
                               </button>
-                            )}
+                            ) : <span className="text-xs text-slate-400">Somente Super Admin</span>}
                           </td>
                         </tr>
                       ))
@@ -437,7 +453,7 @@ export default function Settings() {
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={handleDeleteUser}
         title="Remover Acesso?"
-        description={`Tem certeza que deseja remover o acesso administrativo de "${userToDelete?.full_name}"?`}
+        description={`Excluir permanentemente a conta de "${userToDelete?.full_name}"? O login e o perfil serão removidos. Esta ação não pode ser desfeita.`}
         confirmText="Remover Agora"
         cancelText="Manter Usuário"
         variant="danger"

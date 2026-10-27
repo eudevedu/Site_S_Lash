@@ -131,7 +131,7 @@ export default function FooterSettings() {
     <div className="p-8 max-w-5xl mx-auto space-y-8 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Menu & Rodapé</h1>
+          <h1 className="text-3xl font-bold text-slate-900">Marca & canais</h1>
           <p className="text-slate-500">Gerencie a navegação superior e as informações fixas do rodapé.</p>
         </div>
       </div>
@@ -152,7 +152,7 @@ export default function FooterSettings() {
                 <input 
                   type="text"
                   className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-patriotic-green/20"
-                  placeholder="Ex: Mandato Participativo"
+                  placeholder="Ex: Lash Designer"
                   value={siteSettings.general?.headerSubtitle || ''}
                   onChange={(e) => updateHeaderSubtitle(e.target.value)}
                 />
@@ -203,7 +203,7 @@ export default function FooterSettings() {
                       <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">URL</label>
                       <input 
                         className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-patriotic-green font-mono"
-                        placeholder="Ex: /participar"
+                        placeholder="Ex: /agendar"
                         value={siteSettings.nav?.contactButtonLink || ''}
                         onChange={(e) => updateNavSetting('contactButtonLink', e.target.value)}
                       />
@@ -414,7 +414,7 @@ export default function FooterSettings() {
           <div className="bg-white p-8 rounded-[32px] border border-slate-200 shadow-sm space-y-6">
             <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
               <CheckCircle2 size={20} className="text-patriotic-green" />
-              Copyright & Transparência
+              Direitos autorais
             </h3>
             <div className="space-y-6">
               <div className="space-y-2">
@@ -429,27 +429,12 @@ export default function FooterSettings() {
                   })}
                 />
               </div>
-              <div className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                <span className="text-sm font-bold text-slate-700">Portal da Transparência</span>
-                <label className="relative inline-flex items-center cursor-pointer shrink-0 ml-4">
-                  <input 
-                    type="checkbox" 
-                    className="sr-only peer"
-                    checked={siteSettings.footer?.showTransparencyLink !== false}
-                    onChange={(e) => setSiteSettings({
-                      ...siteSettings,
-                      footer: { ...siteSettings.footer, showTransparencyLink: e.target.checked }
-                    })}
-                  />
-                  <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-patriotic-green"></div>
-                </label>
-              </div>
-              <button 
+              <button
                 onClick={() => handleSaveSettings('footer', siteSettings.footer)}
                 disabled={isSaving}
                 className="w-full py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-slate-800 transition-all shadow-lg"
               >
-                Salvar Copyright
+                Salvar direitos autorais
               </button>
             </div>
           </div>

@@ -19,6 +19,7 @@ import {
 } from 'lucide-react'
 import { projectsApi } from '../../../lib/api/projects'
 import { logsApi } from '../../../lib/api/logs'
+import InstagramPortfolioSettings from './InstagramPortfolioSettings'
 
 export default function ProjectsList() {
   const navigate = useNavigate()
@@ -36,7 +37,7 @@ export default function ProjectsList() {
   const fetchProjects = async () => {
     setLoading(true)
     try {
-      const data = await projectsApi.getAll()
+      const data = await projectsApi.getAll({ summary: true })
       setProjects(data || [])
     } catch (error) {
       console.error('Erro ao buscar projetos:', error)
@@ -64,7 +65,7 @@ export default function ProjectsList() {
       setDeletingId(null)
     } catch (error) {
       console.error('Erro ao excluir projeto:', error)
-      alert('Erro ao excluir projeto: ' + error.message)
+      alert('Erro ao excluir trabalho: ' + error.message)
     } finally {
       setIsActionLoading(false)
     }
@@ -89,9 +90,11 @@ export default function ProjectsList() {
           className="flex items-center gap-2 px-6 py-3 bg-patriotic-green text-white rounded-xl font-bold hover:scale-[1.02] active:scale-95 transition-all shadow-lg"
         >
           <Plus size={20} />
-          Novo Projeto
+          Novo trabalho
         </Link>
       </div>
+
+      <InstagramPortfolioSettings />
 
       {/* Filters & Search */}
       <div className="flex flex-col md:flex-row gap-4">
@@ -133,7 +136,7 @@ export default function ProjectsList() {
           <table className="w-full text-left">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-200">
-                <th className="px-6 py-4 font-bold text-slate-600 uppercase text-xs tracking-wider">Projeto</th>
+                <th className="px-6 py-4 font-bold text-slate-600 uppercase text-xs tracking-wider">Trabalho</th>
                 <th className="px-6 py-4 font-bold text-slate-600 uppercase text-xs tracking-wider">Categoria</th>
                 <th className="px-6 py-4 font-bold text-slate-600 uppercase text-xs tracking-wider">Destaque</th>
                 <th className="px-6 py-4 font-bold text-slate-600 uppercase text-xs tracking-wider">Status</th>
@@ -145,7 +148,7 @@ export default function ProjectsList() {
                 <tr>
                   <td colSpan="5" className="px-6 py-12 text-center">
                     <Loader2 className="animate-spin mx-auto text-patriotic-green mb-2" size={32} />
-                    <p className="text-slate-500 font-medium">Carregando projetos...</p>
+                    <p className="text-slate-500 font-medium">Carregando trabalhos…</p>
                   </td>
                 </tr>
               ) : filteredProjects.length === 0 ? (
@@ -154,7 +157,7 @@ export default function ProjectsList() {
                     <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-300">
                       <Briefcase size={32} />
                     </div>
-                    <p className="text-slate-500 font-medium">Nenhum projeto encontrado.</p>
+                    <p className="text-slate-500 font-medium">Nenhum trabalho no portfólio ainda.</p>
                   </td>
                 </tr>
               ) : (
@@ -164,7 +167,7 @@ export default function ProjectsList() {
                       <div className="flex items-center gap-3">
                         <div className="w-12 h-12 rounded-xl bg-slate-100 overflow-hidden flex-shrink-0 border border-slate-200">
                           {project.cover_image_url ? (
-                            <img src={project.cover_image_url} alt="" className="w-full h-full object-cover" />
+                            <img loading="lazy" decoding="async" src={project.cover_image_url} alt="" className="w-full h-full object-cover" />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center text-slate-400 bg-slate-50">
                               <Briefcase size={20} />
@@ -205,16 +208,16 @@ export default function ProjectsList() {
                       {deletingId === project.id && (
                         <div className="absolute inset-0 z-20 bg-red-600 px-6 flex items-center justify-end gap-3 text-white animate-in slide-in-from-right duration-200">
                           <div className="flex items-center gap-2 text-sm font-bold">
-                            <AlertTriangle size={16} /> Excluir este projeto?
+                            <AlertTriangle size={16} /> Excluir este trabalho?
                           </div>
                           <div className="flex gap-2">
-                            <button 
+              <button
                               onClick={() => setDeletingId(null)}
                               className="px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-xs font-bold transition-all"
                             >
                               Não
                             </button>
-                            <button 
+              <button
                               onClick={(e) => handleDelete(e, project.id)}
                               disabled={isActionLoading}
                               className="px-4 py-1.5 bg-white text-red-600 rounded-lg text-xs font-black shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center gap-1"
@@ -272,8 +275,8 @@ export default function ProjectsList() {
         <div className="space-y-1">
           <h4 className="font-bold text-slate-900">Destaques da Vitrine</h4>
           <p className="text-sm text-slate-600 leading-relaxed">
-            Os projetos marcados como <strong>Destaque</strong> aparecerão na seção principal da sua página inicial. 
-            Use isso para dar visibilidade às suas maiores conquistas.
+            Os trabalhos marcados como <strong>Destaque</strong> aparecerão na seção principal da sua página inicial.
+            Destaque os olhares que representam o estilo do seu estúdio.
           </p>
         </div>
       </div>

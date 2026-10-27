@@ -1,0 +1,8 @@
+{"schema":"openai.presentation.layout/v5","unit":"px","slide":{"id":"sl/vwil1f","index":1,"layout":{"id":"ly/fed43ad8","name":"Blank"},"backgroundColor":"rgba(245,242,236,1)","position":{"left":0,"top":0,"width":1280,"height":720}},
+"elements":[
+{"id":"sh/d03mloje","kind":"textbox","name":"title","position":{"left":72,"top":76,"width":1090,"height":130},"text":"Um endereço para\na sua marca","style":{"fontSize":50,"typeface":"Georgia","color":"#191817","alignment":"left"},"geometry":"rect","lineWidth":0},
+{"id":"sh/szu5sjit","kind":"textbox","name":"body","position":{"left":72,"top":257,"width":350,"height":145},"text":"A cliente encontra seus serviços, conhece seu trabalho e chega ao atendimento com mais contexto.","style":{"fontSize":27,"typeface":"Arial","color":"#837867","alignment":"left"},"geometry":"rect","lineWidth":0},
+{"id":"sh/kzq9s7qp","kind":"textbox","name":"support","position":{"left":72,"top":455,"width":350,"height":130},"text":"O portal reúne as informações que ajudam a escolher o próximo cuidado.","style":{"fontSize":25,"typeface":"Arial","color":"#837867","alignment":"left"},"geometry":"rect","lineWidth":0},
+{"id":"im/87ahgja9","kind":"image","position":{"left":470,"top":217,"width":740,"height":416},"fit":"contain","alt":"Prévia da página inicial"},
+{"id":"sh/ix8rqx8j","kind":"textbox","name":"caption","position":{"left":472,"top":646,"width":690,"height":28},"text":"Prévia do portal. Fotos e textos sujeitos à sua aprovação.","style":{"fontSize":16,"typeface":"Arial","color":"#837867","alignment":"left"},"geometry":"rect","lineWidth":0}
+]}

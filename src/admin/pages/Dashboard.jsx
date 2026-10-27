@@ -1,180 +1,49 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { postsApi } from '../../lib/api/posts'
-import { projectsApi } from '../../lib/api/projects'
-import { formsApi } from '../../lib/api/forms'
-import { supabase } from '../../lib/supabase'
-import { FileText, Briefcase, ClipboardList, Users, Eye, TrendingUp, Clock, Plus, Loader2, ArrowUpRight } from 'lucide-react'
-
-const StatCard = ({ label, value, icon: Icon, color, trend }) => (
-  <div className="bg-white p-6 rounded-[24px] border border-slate-100 shadow-sm premium-card group relative overflow-hidden">
-    <div className="flex justify-between items-start mb-4 relative z-10">
-      <div className={`p-4 rounded-2xl bg-${color}-50 text-${color}-600 group-hover:scale-110 transition-transform duration-500`}>
-        <Icon size={24} />
-      </div>
-      {trend && (
-        <span className="flex items-center gap-1 text-[10px] font-black text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full border border-emerald-100 uppercase tracking-tighter">
-          <TrendingUp size={10} />
-          +{trend}%
-        </span>
-      )}
-    </div>
-    <div className="relative z-10">
-      <div className="text-3xl font-display font-black text-slate-900 mb-1">{value}</div>
-      <div className="text-xs text-slate-500 font-bold uppercase tracking-widest">{label}</div>
-    </div>
-    
-    {/* Decorative background element */}
-    <div className={`absolute -bottom-6 -right-6 w-24 h-24 bg-${color}-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
-  </div>
-)
-
+import { Link } from 'react-router-dom'
+import { Eye, FileText, Users, Sparkles, ArrowUpRight, Plus, RefreshCw, AlertCircle } from 'lucide-react'
+import { supabase, isSupabaseConfigured } from '../../lib/supabase'
+import { useSettings } from '../../context/SettingsContext'
+const shortcuts = [
+  { to:'/admin/services', icon:Sparkles, title:'Seu menu de técnicas', description:'Apresente os serviços e efeitos disponíveis.' },
+  { to:'/admin/projects/new', icon:Eye, title:'Um novo olhar', description:'Adicione um trabalho ao portfólio.' },
+  { to:'/admin/posts/new', icon:FileText, title:'Uma nova leitura', description:'Compartilhe cuidados no beauty journal.' },
+  { to:'/admin/pages/home', icon:Plus, title:'A primeira impressão', description:'Atualize a foto e os destaques do portal.' },
+]
 export default function Dashboard() {
-  const [stats, setStats] = useState({ posts: 0, projects: 0, forms: 0, leads: 0 })
-  const [recentLeads, setRecentLeads] = useState([])
-  const [loading, setLoading] = useState(true)
-  const navigate = useNavigate()
-
+  const { settings } = useSettings()
+  const [stats, setStats] = useState(null)
+  const [recent, setRecent] = useState([])
+  const [loading, setLoading] = useState(isSupabaseConfigured)
+  const [error, setError] = useState('')
+  const [attempt, setAttempt] = useState(0)
   useEffect(() => {
-    const fetchStats = async () => {
+    if (!isSupabaseConfigured) { setError('Conecte o Supabase para carregar os dados do estúdio.'); return }
+    let active = true
+    setLoading(true)
+    setError('')
+    async function load() {
       try {
-        const [
-          postsRes,
-          projectsRes,
-          formsRes,
-          leadsRes,
-          recentLeadsRes
-        ] = await Promise.all([
-          supabase.from('posts').select('*', { count: 'exact', head: true }),
-          supabase.from('projects').select('*', { count: 'exact', head: true }),
-          supabase.from('forms').select('*', { count: 'exact', head: true }),
-          supabase.from('leads').select('*', { count: 'exact', head: true }),
-          supabase.from('leads').select('*').order('created_at', { ascending: false }).limit(3)
+        const results = await Promise.all([
+          supabase.from('posts').select('id',{count:'exact',head:true}).eq('status','published'),
+          supabase.from('projects').select('id',{count:'exact',head:true}).eq('status','published'),
+          supabase.from('leads').select('id',{count:'exact',head:true}),
+          supabase.from('leads').select('id,name,email,phone,created_at,status').order('created_at',{ascending:false}).limit(4),
         ])
-
-        setStats({
-          posts: postsRes.count || 0,
-          projects: projectsRes.count || 0,
-          forms: formsRes.count || 0,
-          leads: leadsRes.count || 0
-        })
-
-        setRecentLeads(recentLeadsRes.data || [])
-      } catch (err) {
-        console.error(err)
-      } finally {
-        setLoading(false)
-      }
+        const failed = results.find(result => result.error)
+        if (failed) throw failed.error
+        if (active) { setStats({posts:results[0].count,projects:results[1].count,leads:results[2].count}); setRecent(results[3].data || []) }
+      } catch { if (active) setError('Não foi possível carregar os dados do estúdio. Verifique a conexão e tente novamente.') }
+      finally { if (active) setLoading(false) }
     }
-    fetchStats()
-  }, [])
-
-  if (loading) return (
-    <div className="min-h-[400px] flex items-center justify-center">
-      <div className="flex flex-col items-center gap-4">
-        <Loader2 className="animate-spin text-patriotic-green" size={40} />
-        <span className="text-sm font-bold text-slate-400 uppercase tracking-widest">Carregando painel...</span>
-      </div>
-    </div>
-  )
-
-  return (
-    <div className="space-y-10">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h1 className="text-4xl font-display font-black text-slate-900 mb-2">Visão Geral</h1>
-          <p className="text-slate-500 font-medium">Bem-vindo ao centro de comando do seu CMS.</p>
-        </div>
-        <button
-          onClick={() => navigate('/admin/posts/new')}
-          className="bg-patriotic-green text-white px-8 py-4 rounded-2xl font-black text-sm hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-patriotic-green/20 flex items-center gap-3"
-        >
-          <Plus size={20} />
-          NOVA PUBLICAÇÃO
-        </button>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard label="Leads Totais" value={stats.leads} icon={Users} color="emerald" trend={12} />
-        <StatCard label="Artigos publicados" value={stats.posts} icon={FileText} color="blue" />
-        <StatCard label="Projetos" value={stats.projects} icon={Briefcase} color="purple" />
-        <StatCard label="Formulários" value={stats.forms} icon={ClipboardList} color="amber" />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 bg-white p-8 rounded-[32px] border border-slate-100 shadow-sm relative overflow-hidden">
-          <div className="flex justify-between items-center mb-8 relative z-10">
-            <div>
-              <h3 className="text-xl font-display font-black text-slate-800">Leads Recentes</h3>
-              <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mt-1">Últimos contatos recebidos</p>
-            </div>
-            <button 
-              onClick={() => navigate('/admin/leads')} 
-              className="group flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-patriotic-green hover:bg-patriotic-green/5 px-4 py-2 rounded-full transition-all"
-            >
-              Ver todos <ArrowUpRight size={12} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-            </button>
-          </div>
-          
-          <div className="space-y-3 relative z-10">
-            {recentLeads.length === 0 ? (
-              <div className="text-center py-12 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-100 text-slate-400 text-sm font-medium italic">
-                Nenhum lead recebido ainda.
-              </div>
-            ) : (
-              recentLeads.map((lead) => (
-                <div 
-                  key={lead.id} 
-                  onClick={() => navigate('/admin/leads')} 
-                  className="flex items-center gap-4 p-4 rounded-2xl hover:bg-slate-50 transition-all cursor-pointer border border-transparent hover:border-slate-100 group"
-                >
-                  <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-400 group-hover:bg-emerald-100 group-hover:text-emerald-600 transition-colors">
-                    <Users size={20} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex justify-between items-center mb-0.5">
-                      <div className="font-bold text-slate-800 truncate">{lead.name}</div>
-                      <div className="text-[9px] text-slate-400 font-black uppercase tracking-tighter flex items-center gap-1">
-                        <Clock size={10} />
-                        {new Date(lead.created_at).toLocaleDateString('pt-BR')}
-                      </div>
-                    </div>
-                    <div className="text-xs text-slate-500 truncate">{lead.email || lead.phone}</div>
-                  </div>
-                  <div className="w-8 h-8 rounded-full border border-slate-100 flex items-center justify-center text-slate-300 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <ArrowUpRight size={14} />
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-
-        <div className="bg-slate-900 p-10 rounded-[40px] text-white relative overflow-hidden flex flex-col justify-between group shadow-2xl shadow-slate-900/20">
-          <div className="relative z-10">
-            <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-patriotic-yellow mb-6">
-              <TrendingUp size={24} />
-            </div>
-            <h3 className="text-3xl font-display font-black mb-4 leading-tight">Próximos<br />Passos</h3>
-            <p className="text-slate-400 text-sm mb-8 leading-relaxed">
-              Você tem <span className="text-patriotic-yellow font-bold">{stats.leads} leads</span> na sua base.
-              Aproveite o engajamento para converter mais apoiadores!
-            </p>
-            <button
-              onClick={() => navigate('/admin/leads')}
-              className="w-full bg-white text-slate-900 px-8 py-4 rounded-2xl font-black text-xs hover:bg-patriotic-yellow transition-all flex items-center justify-center gap-3"
-            >
-              RESPONDER AGORA
-              <ArrowUpRight size={16} />
-            </button>
-          </div>
-          
-          {/* Background decoration */}
-          <div className="absolute top-0 right-0 p-10 opacity-5 group-hover:opacity-10 transition-opacity rotate-12 scale-150 transform translate-x-1/4 -translate-y-1/4">
-            <Users size={240} />
-          </div>
-        </div>
-      </div>
-    </div>
-  )
+    load()
+    return () => { active = false }
+  }, [attempt])
+  const metrics = [{label:'Técnicas no portal',value:settings.services?.length || 0,icon:Sparkles,to:'/admin/services'}, {label:'Olhares publicados',value:stats?.projects,icon:Eye,to:'/admin/projects'}, {label:'Artigos publicados',value:stats?.posts,icon:FileText,to:'/admin/posts'}, {label:'Contatos recebidos',value:stats?.leads,icon:Users,to:'/admin/leads'}]
+  return <div className="studio-dashboard"><div className="studio-page-heading"><div><span className="studio-eyebrow">SEU ESTÚDIO, EM CADA DETALHE</span><h1>Um olhar para o seu negócio.</h1><p>Cuide da sua presença online, dos seus trabalhos e de quem quer conhecer seu atendimento.</p></div><Link to="/admin/projects/new" className="studio-primary"><Plus size={17}/>Novo trabalho</Link></div>
+    {error && <div className="studio-data-notice" role="alert"><AlertCircle size={18}/><span>{error}</span>{isSupabaseConfigured && <button onClick={() => setAttempt(n => n+1)} disabled={loading}><RefreshCw size={15}/>Tentar novamente</button>}</div>}
+    <div className="studio-metrics">{metrics.map(({label,value,icon:Icon,to}) => <Link key={label} to={to} className="studio-metric"><div><Icon size={20} strokeWidth={1.5}/><ArrowUpRight size={15}/></div><strong>{value ?? (loading ? '…' : '—')}</strong><span>{label}</span></Link>)}</div>
+    <div className="studio-dashboard-grid"><section className="studio-panel"><div className="studio-section-heading"><div><span className="studio-eyebrow">CRIE, CUIDE, INSPIRE</span><h2>Seu portal em movimento</h2></div></div><div className="studio-shortcuts">{shortcuts.map(({to,icon:Icon,title,description}) => <Link to={to} key={to}><span><Icon size={22} strokeWidth={1.5}/></span><div><h3>{title}</h3><p>{description}</p></div><ArrowUpRight size={16}/></Link>)}</div></section>
+    <section className="studio-brand-card"><span className="studio-eyebrow">A ESSÊNCIA DA SUA MARCA</span><span className="studio-brand-art" aria-hidden="true">{settings.general.shortName.toLowerCase()}.</span><h2>{settings.general.name}</h2><p>Uma presença digital tão cuidadosa quanto cada detalhe do seu trabalho.</p><Link to="/admin/footer">Editar marca & canais <ArrowUpRight size={16}/></Link></section></div>
+    <section className="studio-panel"><div className="studio-section-heading"><div><span className="studio-eyebrow">CONVERSAS QUE COMEÇAM AQUI</span><h2>Últimos contatos</h2></div><Link to="/admin/leads">Ver contatos <ArrowUpRight size={16}/></Link></div>{loading ? <p className="studio-empty" role="status">Carregando contatos…</p> : error ? <p className="studio-empty">Os contatos aparecerão aqui quando a conexão estiver disponível.</p> : !recent.length ? <p className="studio-empty">Ainda não há contatos recebidos. Os envios dos formulários aparecerão aqui.</p> : <div className="studio-recent-list">{recent.map(lead => <Link to="/admin/leads" key={lead.id}><span className="studio-avatar">{lead.name?.[0]?.toUpperCase() || '?'}</span><div><strong>{lead.name}</strong><span>{lead.email || lead.phone || 'Contato pelo formulário'}</span></div><time>{new Date(lead.created_at).toLocaleDateString('pt-BR')}</time><ArrowUpRight size={15}/></Link>)}</div>}<p className="studio-panel-note">Contatos de formulários são pedidos de informação. A confirmação de horários é feita pelo canal de atendimento.</p></section>
+  </div>
 }

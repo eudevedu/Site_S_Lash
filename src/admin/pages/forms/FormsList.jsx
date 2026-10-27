@@ -83,7 +83,7 @@ export default function FormsList() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-slate-900">Formulários Personalizados</h1>
-          <p className="text-slate-500">Crie e gerencie formulários para diferentes finalidades (pesquisas, filiação, ouvidoria).</p>
+          <p className="text-slate-500">Crie formulários de interesse, dúvidas sobre técnicas e contato com o estúdio.</p>
         </div>
         
         <Link 

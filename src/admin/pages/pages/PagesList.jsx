@@ -21,9 +21,11 @@ import {
 import { pagesApi } from '../../../lib/api/pages'
 import { formsApi } from '../../../lib/api/forms'
 import { logsApi } from '../../../lib/api/logs'
+import { useSettings } from '../../../context/SettingsContext'
 
 export default function PagesList() {
   const navigate = useNavigate()
+  const { refreshNavigation } = useSettings()
   const [pages, setPages] = useState([])
   const [forms, setForms] = useState([])
   const [loading, setLoading] = useState(true)
@@ -39,7 +41,7 @@ export default function PagesList() {
     setLoading(true)
     try {
       const [pagesData, formsData] = await Promise.all([
-        pagesApi.getAll(),
+        pagesApi.getAll({ summary: true }),
         formsApi.getAll()
       ])
       setPages(pagesData || [])
@@ -67,6 +69,7 @@ export default function PagesList() {
         setForms(forms.filter(f => f.id !== item.id))
       } else {
         await pagesApi.delete(item.id)
+        refreshNavigation()
         await logsApi.logAction('Excluiu página customizada', 'page', item.id, { title: item.title, slug: item.slug })
         setPages(pages.filter(p => p.id !== item.id))
       }
@@ -82,8 +85,9 @@ export default function PagesList() {
   const systemPages = [
     { id: 'home', title: 'Página Inicial', slug: '', type: 'system', icon: Layout, editPath: '/admin/pages/home' },
     { id: 'sobre', title: 'Sobre', slug: 'sobre', type: 'system', icon: User, editPath: '/admin/pages/about' },
-    { id: 'blog', title: 'Blog / Notícias', slug: 'blog', type: 'system', icon: FileText, editPath: '/admin/posts' },
-    { id: 'projetos', title: 'Meu Trabalho', slug: 'projetos', type: 'system', icon: Layout, editPath: '/admin/projects' },
+    { id: 'servicos', title: 'Serviços', slug: 'servicos', type: 'system', icon: Layout, editPath: '/admin/services' },
+    { id: 'blog', title: 'Beauty journal', slug: 'blog', type: 'system', icon: FileText, editPath: '/admin/posts' },
+    { id: 'projetos', title: 'Portfólio de olhares', slug: 'projetos', type: 'system', icon: Layout, editPath: '/admin/projects' },
   ]
 
   const mappedForms = forms.map(form => ({
@@ -192,13 +196,13 @@ export default function PagesList() {
                             <AlertTriangle size={18} /> Excluir permanentemente?
                           </div>
                           <div className="flex gap-2">
-                            <button 
+              <button
                               onClick={() => setDeletingItem(null)}
                               className="px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-xs font-bold transition-all"
                             >
                               Não
                             </button>
-                            <button 
+              <button
                               onClick={(e) => handleDelete(e, page)}
                               disabled={isActionLoading}
                               className="px-4 py-1.5 bg-white text-red-600 rounded-lg text-xs font-black shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center gap-1"
@@ -255,7 +259,7 @@ export default function PagesList() {
         <div className="relative z-10 max-w-2xl">
           <h3 className="text-2xl font-bold mb-4">Dica de Gerenciamento</h3>
           <p className="text-slate-400 leading-relaxed">
-            As páginas do sistema (Home, Blog, Projetos) são fundamentais e não podem ser excluídas, mas você pode editar todo o seu conteúdo a qualquer momento. 
+            As páginas do sistema (Início, Journal, Portfólio) são fundamentais e não podem ser excluídas, mas você pode editar todo o seu conteúdo a qualquer momento.
             Páginas customizadas e formulários que você criar podem ser removidos quando não forem mais necessários.
           </p>
         </div>

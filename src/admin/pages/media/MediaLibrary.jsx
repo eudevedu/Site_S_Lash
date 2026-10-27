@@ -112,7 +112,7 @@ export default function MediaLibrary() {
                   key={item.id} 
                   className={`group relative aspect-square bg-white rounded-[32px] overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ${deletingId === item.id ? 'opacity-50 grayscale pointer-events-none' : ''}`}
                 >
-                  <img src={item.url} alt={item.original_name} className="w-full h-full object-cover" />
+                  <img loading="lazy" decoding="async" src={item.url} alt={item.original_name} className="w-full h-full object-cover" />
                   
                   {/* Actions Overlay */}
                   <div className="absolute inset-0 bg-slate-900/80 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-3 p-4">

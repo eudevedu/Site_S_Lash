@@ -1,0 +1,7 @@
+{"schema":"openai.presentation.layout/v5","unit":"px","slide":{"id":"sl/ngmdpe","index":5,"layout":{"id":"ly/fed43ad8","name":"Blank"},"backgroundColor":"rgba(245,242,236,1)","position":{"left":0,"top":0,"width":1280,"height":720}},
+"elements":[
+{"id":"sh/q50jih8r","kind":"textbox","name":"title","position":{"left":72,"top":65,"width":1130,"height":80},"text":"Um painel para cuidar do conteúdo","style":{"fontSize":50,"typeface":"Georgia","color":"#191817","alignment":"left"},"geometry":"rect","lineWidth":0},
+{"id":"sh/54r2pcr6","kind":"textbox","name":"body","position":{"left":72,"top":227,"width":345,"height":160},"text":"Você pode atualizar serviços e fotos, publicar trabalhos e organizar os textos do portal.","style":{"fontSize":28,"typeface":"Arial","color":"#837867","alignment":"left"},"geometry":"rect","lineWidth":0},
+{"id":"sh/43i1g7al","kind":"textbox","name":"support","position":{"left":72,"top":442,"width":345,"height":145},"text":"A administração reúne os contatos enviados pelos formulários e os acessos da equipe.","style":{"fontSize":25,"typeface":"Arial","color":"#837867","alignment":"left"},"geometry":"rect","lineWidth":0},
+{"id":"im/mtgja90f","kind":"image","position":{"left":450,"top":175,"width":760,"height":500},"fit":"contain","alt":"Prévia visual do painel administrativo"}
+]}

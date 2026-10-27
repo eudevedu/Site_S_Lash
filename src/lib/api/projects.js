@@ -1,13 +1,21 @@
 import { supabase } from '../supabase'
 
 export const projectsApi = {
-  async getAll({ status, limit } = {}) {
-    let query = supabase.from('projects').select('*').order('created_at', { ascending: false })
+  async getAll({ status, limit, summary = false, featuredFirst = false, excludeId } = {}) {
+    let query = supabase.from('projects').select(summary ? 'id,title,slug,description,cover_image_url,status,featured,created_at' : '*')
+    if (featuredFirst) query = query.order('featured', { ascending: false })
+    query = query.order('created_at', { ascending: false })
     if (status) query = query.eq('status', status)
+    if (excludeId) query = query.neq('id', excludeId)
     if (limit) query = query.limit(limit)
     const { data, error } = await query
     if (error) throw error
     return data || []
+  },
+  async getBySlug(slug) {
+    const { data, error } = await supabase.from('projects').select('*').eq('slug', slug).eq('status', 'published').single()
+    if (error) throw error
+    return data
   },
   async getById(id) {
     const { data, error } = await supabase.from('projects').select('*').eq('id', id).single()

@@ -1,0 +1,8 @@
+{"schema":"openai.presentation.layout/v5","unit":"px","slide":{"id":"sl/atherl","index":8,"layout":{"id":"ly/fed43ad8","name":"Blank"},"backgroundColor":"rgba(25,24,23,1)","position":{"left":0,"top":0,"width":1280,"height":720}},
+"elements":[
+{"id":"sh/ponatwb6","kind":"textbox","name":"label","position":{"left":72,"top":74,"width":1100,"height":40},"text":"PROPOSTA PARA SABRINA ARAÚJO","style":{"fontSize":18,"typeface":"Arial","color":"#C9B494","alignment":"left"},"geometry":"rect","lineWidth":0},
+{"id":"sh/21wrihcf","kind":"textbox","name":"title","position":{"left":72,"top":195,"width":1120,"height":100},"text":"Investimento e condições","style":{"fontSize":58,"typeface":"Georgia","color":"#F5F2EC","alignment":"left"},"geometry":"rect","lineWidth":0},
+{"id":"sh/n258rmt0","kind":"textbox","name":"price","position":{"left":72,"top":331,"width":1100,"height":100},"text":"A combinar","style":{"fontSize":72,"typeface":"Georgia","color":"#C9B494","alignment":"left"},"geometry":"rect","lineWidth":0},
+{"id":"sh/47a98nuh","kind":"textbox","name":"body","position":{"left":77,"top":468,"width":1010,"height":90},"text":"Implantação, mensalidade, prazo e suporte serão definidos após a validação do escopo.","style":{"fontSize":29,"typeface":"Arial","color":"#D2C5B1","alignment":"left"},"geometry":"rect","lineWidth":0},
+{"id":"sh/5s3qhsvm","kind":"textbox","name":"next","position":{"left":77,"top":608,"width":1070,"height":50},"text":"Próximo passo: alinhar o conteúdo e apresentar a proposta final.","style":{"fontSize":25,"typeface":"Arial","color":"#F5F2EC","alignment":"left"},"geometry":"rect","lineWidth":0}
+]}

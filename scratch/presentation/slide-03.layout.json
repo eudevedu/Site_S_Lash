@@ -1,0 +1,7 @@
+{"schema":"openai.presentation.layout/v5","unit":"px","slide":{"id":"sl/a5l589","index":2,"layout":{"id":"ly/fed43ad8","name":"Blank"},"backgroundColor":"rgba(245,242,236,1)","position":{"left":0,"top":0,"width":1280,"height":720}},
+"elements":[
+{"id":"sh/e9k3q9cn","kind":"textbox","name":"title","position":{"left":72,"top":65,"width":1120,"height":80},"text":"Serviços apresentados com clareza","style":{"fontSize":50,"typeface":"Georgia","color":"#191817","alignment":"left"},"geometry":"rect","lineWidth":0},
+{"id":"sh/pgv2pova","kind":"textbox","name":"body","position":{"left":72,"top":159,"width":1080,"height":70},"text":"Cada atendimento pode ter descrição, foto, valor e duração. Você escolhe o que publicar.","style":{"fontSize":27,"typeface":"Arial","color":"#837867","alignment":"left"},"geometry":"rect","lineWidth":0},
+{"id":"im/ds7a98n2","kind":"image","position":{"left":72,"top":240,"width":1136,"height":410},"crop":{"left":0,"top":0.41,"right":0,"bottom":0},"fit":"contain","alt":"Catálogo de serviços do portal"},
+{"id":"sh/nedkned4","kind":"textbox","name":"caption","position":{"left":72,"top":660,"width":1030,"height":26},"text":"Os serviços e as condições comerciais serão revisados com você.","style":{"fontSize":17,"typeface":"Arial","color":"#837867","alignment":"left"},"geometry":"rect","lineWidth":0}
+]}

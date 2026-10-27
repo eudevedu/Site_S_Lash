@@ -15,6 +15,7 @@ const LeadPage = lazy(() => import('./site/pages/LeadPage'))
 const FormPage = lazy(() => import('./site/pages/FormPage'))
 const About = lazy(() => import('./site/pages/About'))
 const Booking = lazy(() => import('./site/pages/Booking'))
+const Services = lazy(() => import('./site/pages/Services'))
 const ServicesSettings = lazy(() => import('./admin/pages/ServicesSettings'))
 
 // Admin Pages (Lazy)
@@ -88,6 +89,7 @@ export default function App() {
               <Route path="/projetos" element={<Portfolio />} />
               <Route path="/portfolio" element={<Portfolio />} />
               <Route path="/agendar" element={<Booking />} />
+              <Route path="/servicos" element={<Services />} />
               <Route path="/projetos/:slug" element={<ProjectDetail />} />
               <Route path="/p/:slug" element={<DynamicPage />} />
               <Route path="/participar" element={<LeadPage />} />

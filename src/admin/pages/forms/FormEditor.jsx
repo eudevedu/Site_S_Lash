@@ -44,9 +44,9 @@ export default function FormEditor() {
     fields: [],
     settings: {
       submitButtonText: 'Enviar',
-      successMessage: 'Obrigado por preencher o formulário!',
+      successMessage: 'Recebemos seu interesse! O envio não confirma um horário.',
       redirectUrl: '',
-      sidebarFooterText: 'Junte-se a nós nessa caminhada!'
+      sidebarFooterText: 'Seu próximo olhar começa com uma conversa.'
     }
   })
 
@@ -243,7 +243,7 @@ export default function FormEditor() {
               <input 
                 type="text" 
                 className="w-full p-3 bg-slate-50 border-2 border-transparent focus:border-patriotic-green focus:bg-white rounded-xl outline-none transition-all font-medium"
-                placeholder="Ex: Junte-se a nós nessa caminhada!"
+                placeholder="Ex: Seu próximo olhar começa com uma conversa."
                 value={formData.settings.sidebarFooterText || ''}
                 onChange={(e) => setFormData({ ...formData, settings: { ...formData.settings, sidebarFooterText: e.target.value } })}
               />

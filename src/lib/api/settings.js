@@ -1,7 +1,9 @@
 import { supabase } from '../supabase'
+import { sharePublicRead, invalidatePublicRead } from '../publicReads'
 
 export const settingsApi = {
   async getAll() {
+    return sharePublicRead('settings', async () => {
     const { data, error } = await supabase
       .from('site_settings')
       .select('*')
@@ -12,6 +14,7 @@ export const settingsApi = {
       acc[item.key] = item.value
       return acc
     }, {})
+    })
   },
 
   async getByKey(key) {
@@ -29,6 +32,7 @@ export const settingsApi = {
       .from('site_settings')
       .upsert({ key, value, updated_at: new Date().toISOString() }, { onConflict: 'key' })
     if (error) throw error
+    invalidatePublicRead('settings')
     return data
   },
 
@@ -43,6 +47,7 @@ export const settingsApi = {
       .from('site_settings')
       .upsert(updates, { onConflict: 'key' })
     if (error) throw error
+    invalidatePublicRead('settings')
     return data
   }
 }

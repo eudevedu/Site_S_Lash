@@ -14,30 +14,22 @@ export default function ProjectDetail() {
   const [relatedProjects, setRelatedProjects] = useState([])
 
   useEffect(() => {
-    fetchProject()
-  }, [slug])
-
-  const fetchProject = async () => {
+    let active = true
     setLoading(true)
-    try {
-      // Find project by slug
-      const allProjects = await projectsApi.getAll({ status: 'published' })
-      const currentProject = allProjects.find(p => p.slug === slug)
-      
-      if (!currentProject) {
-        navigate('/projetos')
-        return
-      }
-
+    setProject(null)
+    setRelatedProjects([])
+    projectsApi.getBySlug(slug).then(currentProject => {
+      if (!active) return
       setProject(currentProject)
-      setRelatedProjects(allProjects.filter(p => p.id !== currentProject.id).slice(0, 3))
-    } catch (err) {
-      console.error(err)
-      navigate('/projetos')
-    } finally {
       setLoading(false)
-    }
-  }
+      // Related cards load independently; reading the current work does not wait.
+      projectsApi.getAll({status:'published',summary:true,limit:3,excludeId:currentProject.id})
+        .then(data => { if (active) setRelatedProjects(data) }).catch(() => {})
+    }).catch(() => {
+      if (active) { setLoading(false); navigate('/portfolio', {replace:true}) }
+    })
+    return () => { active = false }
+  }, [slug,navigate])
 
   if (loading) {
     return (

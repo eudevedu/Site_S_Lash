@@ -113,7 +113,7 @@ export default function AuthorsList() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-slate-900">Autores & Colunistas</h1>
-          <p className="text-slate-500">Gerencie as pessoas que assinam as notícias do portal.</p>
+          <p className="text-slate-500">Gerencie quem assina os artigos do beauty journal.</p>
         </div>
         
         <button 

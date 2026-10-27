@@ -12,6 +12,7 @@ import {
 } from 'lucide-react'
 import { pagesApi } from '../../../lib/api/pages'
 import { logsApi } from '../../../lib/api/logs'
+import { useSettings } from '../../../context/SettingsContext'
 import toast from 'react-hot-toast'
 
 const GrapesEditor = lazy(() => import('../../components/editor/GrapesEditor'))
@@ -19,6 +20,7 @@ const GrapesEditor = lazy(() => import('../../components/editor/GrapesEditor'))
 export default function PageEditor() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { refreshNavigation } = useSettings()
   const isEditing = Boolean(id)
 
   const [loading, setLoading] = useState(isEditing)
@@ -44,8 +46,7 @@ export default function PageEditor() {
 
   const fetchPage = async () => {
     try {
-      const allPages = await pagesApi.getAll()
-      const page = allPages.find(p => p.id === id)
+      const page = await pagesApi.getById(id)
       if (page) {
         setFormData(page)
       } else {
@@ -77,6 +78,7 @@ export default function PageEditor() {
         await logsApi.logAction('Criou nova página customizada', 'page', newPage?.id, { title: formData.title })
         toast.success('Página criada com sucesso!', { id: toastId })
       }
+      refreshNavigation()
       navigate('/admin/pages')
     } catch (error) {
       console.error('Erro detalhado ao salvar:', error)
