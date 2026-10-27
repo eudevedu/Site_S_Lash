@@ -4,7 +4,7 @@ import { useSettings } from '../../context/SettingsContext'
 export default function SEO({ title, description, image, article }) {
   const { settings } = useSettings()
 
-  const siteName = settings?.general?.name || 'Site Político'
+  const siteName = settings?.general?.name || 'Lash Design'
   const defaultDescription = settings?.general?.description || ''
   const seoTitle = title ? `${title} | ${siteName}` : `${siteName} - ${settings?.general?.slogan || ''}`
   const seoDescription = description || defaultDescription

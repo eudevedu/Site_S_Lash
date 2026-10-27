@@ -243,7 +243,7 @@ export default function DesignSettings() {
                   {siteSettings.general?.shortName || 'AM'}
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-white font-bold text-sm leading-none">{siteSettings.general?.name || 'Nome do Político'}</span>
+                  <span className="text-white font-bold text-sm leading-none">{siteSettings.general?.name || 'Sabrina Araújo'}</span>
                   <span className="text-[8px] text-slate-500 font-black uppercase tracking-widest mt-1">Candidato Estadual</span>
                 </div>
               </div>

@@ -80,8 +80,8 @@ export default function ProjectsList() {
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Meus Projetos</h1>
-          <p className="text-slate-500">Gerencie as obras, conquistas e ações do seu mandato.</p>
+          <h1 className="text-3xl font-bold text-slate-900">Meu Portfólio</h1>
+          <p className="text-slate-500">Gerencie os trabalhos e técnicas do seu portfólio.</p>
         </div>
         
         <Link 

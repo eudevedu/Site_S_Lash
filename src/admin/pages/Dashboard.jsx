@@ -96,7 +96,7 @@ export default function Dashboard() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard label="Leads Totais" value={stats.leads} icon={Users} color="emerald" trend={12} />
-        <StatCard label="Notícias Ativas" value={stats.posts} icon={FileText} color="blue" />
+        <StatCard label="Artigos publicados" value={stats.posts} icon={FileText} color="blue" />
         <StatCard label="Projetos" value={stats.projects} icon={Briefcase} color="purple" />
         <StatCard label="Formulários" value={stats.forms} icon={ClipboardList} color="amber" />
       </div>

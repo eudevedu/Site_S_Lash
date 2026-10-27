@@ -292,6 +292,8 @@ export default function FooterSettings() {
             </h3>
             <div className="space-y-4">
               {[
+                { icon: Globe, label: 'WhatsApp (https://wa.me/...)', field: 'whatsapp', color: 'text-slate-900' },
+                { icon: Globe, label: 'Links oficiais (bio.link)', field: 'bio', color: 'text-slate-900' },
                 { icon: Instagram, label: 'Instagram', field: 'instagram', color: 'text-pink-500' },
                 { icon: Facebook, label: 'Facebook', field: 'facebook', color: 'text-blue-600' },
                 { icon: Twitter, label: 'Twitter / X', field: 'twitter', color: 'text-slate-900' },

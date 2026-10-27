@@ -35,7 +35,7 @@ export default function HomeEditor() {
     general: { name: '', shortName: '', slogan: '', description: '' },
     contact: { email: '', phone: '', address: '' },
     socials: { facebook: '', instagram: '', twitter: '', youtube: '', whatsapp: '' },
-    colors: { primary: '#006738', secondary: '#FFD100', accent: '#0038A8' },
+    colors: { primary: '#181818', secondary: '#ded4c5', accent: '#8c8173' },
     hero: { title: '', titleAccent: '', ctaPrimary: '', ctaSecondary: '', hero_image_url: '', ctaSecondaryUrl: '', photoSub: '', badge1: '', badge2: '' },
     nav: { sticky: true, showContactButton: true },
     footer: { copyrightText: '', showTransparencyLink: true, links: [] },
@@ -95,8 +95,8 @@ export default function HomeEditor() {
 
   const tabs = [
     { id: 'hero', label: 'Destaque (Hero)', icon: Layout },
-    { id: 'projects', label: 'Seção de Projetos', icon: Award },
-    { id: 'blog', label: 'Seção de Notícias', icon: FileText }
+    { id: 'projects', label: 'Seção de Portfólio', icon: Award },
+    { id: 'blog', label: 'Seção de Journal', icon: FileText }
   ]
 
   if (!currentSettings) {
@@ -107,8 +107,8 @@ export default function HomeEditor() {
     )
   }
 
-  const primaryColor = formData.colors?.primary || '#006738'
-  const secondaryColor = formData.colors?.secondary || '#FFD100'
+  const primaryColor = formData.colors?.primary || '#181818'
+  const secondaryColor = formData.colors?.secondary || '#ded4c5'
 
   // Render Title for Hero Section with Custom Accent color
   const renderHeroTitle = () => {
@@ -386,7 +386,7 @@ export default function HomeEditor() {
                           value={formData.projects.listDescription || ''}
                           onChange={(e) => handleInputChange('projects', 'listDescription', e.target.value)}
                           className="w-full p-4 bg-slate-50 border-2 border-transparent focus:border-patriotic-green focus:bg-white rounded-2xl outline-none transition-all font-medium resize-none text-sm"
-                          placeholder="Projetos, obras e conquistas que estão transformando a realidade de nossa região."
+                          placeholder="Conheça os trabalhos e detalhes das técnicas de lash design."
                         />
                       </div>
                     </div>
@@ -424,7 +424,7 @@ export default function HomeEditor() {
                           value={formData.blog.title || ''}
                           onChange={(e) => handleInputChange('blog', 'title', e.target.value)}
                           className="w-full p-4 bg-slate-50 border-2 border-transparent focus:border-patriotic-green focus:bg-white rounded-2xl outline-none transition-all font-bold"
-                          placeholder="Ex: Últimas Notícias."
+                          placeholder="Ex: Cuidados & inspiração."
                         />
                       </div>
 
@@ -450,7 +450,7 @@ export default function HomeEditor() {
                           value={formData.blog.listTitle || ''}
                           onChange={(e) => handleInputChange('blog', 'listTitle', e.target.value)}
                           className="w-full p-4 bg-slate-50 border-2 border-transparent focus:border-patriotic-green focus:bg-white rounded-2xl outline-none transition-all font-bold"
-                          placeholder="Ex: Notícias e Atualizações"
+                          placeholder="Ex: Cuidados & inspiração"
                         />
                       </div>
 
@@ -461,7 +461,7 @@ export default function HomeEditor() {
                           value={formData.blog.listDescription || ''}
                           onChange={(e) => handleInputChange('blog', 'listDescription', e.target.value)}
                           className="w-full p-4 bg-slate-50 border-2 border-transparent focus:border-patriotic-green focus:bg-white rounded-2xl outline-none transition-all font-medium resize-none text-sm"
-                          placeholder="Fique por dentro de todas as ações, projetos e novidades do nosso mandato."
+                          placeholder="Dicas, novidades e cuidados para valorizar o seu olhar."
                         />
                       </div>
                     </div>
@@ -645,7 +645,7 @@ export default function HomeEditor() {
                           {formData.blog.subtitle || 'Fique por Dentro'}
                         </span>
                         <h3 className="text-xl md:text-2xl font-display font-black text-slate-900 leading-tight">
-                          {renderSectionTitle(formData.blog.title, formData.blog.titleAccent, "Últimas Notícias.", "Notícias.", false)}
+                          {renderSectionTitle(formData.blog.title, formData.blog.titleAccent, "Cuidados & inspiração.", "Notícias.", false)}
                         </h3>
                       </div>
 
@@ -663,7 +663,7 @@ export default function HomeEditor() {
                       <div className="pt-4 border-t border-slate-100">
                         <span className="text-[7px] font-black text-slate-400 uppercase tracking-wider block mb-1">Na página de Listagem (/blog)</span>
                         <div className="bg-slate-50 p-3 rounded-xl border border-slate-100 shadow-inner space-y-1 text-left">
-                          <div className="text-xs font-black" style={{ color: primaryColor }}>{formData.blog.listTitle || 'Notícias e Atualizações'}</div>
+                          <div className="text-xs font-black" style={{ color: primaryColor }}>{formData.blog.listTitle || 'Cuidados & inspiração'}</div>
                           <div className="text-[8px] text-slate-500 leading-normal">{formData.blog.listDescription || 'Fique por dentro de todas as ações...'}</div>
                         </div>
                       </div>

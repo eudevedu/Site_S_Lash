@@ -14,6 +14,8 @@ const DynamicPage = lazy(() => import('./site/pages/DynamicPage'))
 const LeadPage = lazy(() => import('./site/pages/LeadPage'))
 const FormPage = lazy(() => import('./site/pages/FormPage'))
 const About = lazy(() => import('./site/pages/About'))
+const Booking = lazy(() => import('./site/pages/Booking'))
+const ServicesSettings = lazy(() => import('./admin/pages/ServicesSettings'))
 
 // Admin Pages (Lazy)
 const AdminLayout = lazy(() => import('./admin/AdminLayout'))
@@ -84,6 +86,8 @@ export default function App() {
               <Route path="/blog/:slug" element={<Post />} />
               <Route path="/sobre" element={<About />} />
               <Route path="/projetos" element={<Portfolio />} />
+              <Route path="/portfolio" element={<Portfolio />} />
+              <Route path="/agendar" element={<Booking />} />
               <Route path="/projetos/:slug" element={<ProjectDetail />} />
               <Route path="/p/:slug" element={<DynamicPage />} />
               <Route path="/participar" element={<LeadPage />} />
@@ -118,6 +122,7 @@ export default function App() {
                 <Route path="forms/edit/:id" element={<FormEditor />} />
                 <Route path="forms/submissions/:id" element={<SubmissionsList />} />
                 <Route path="settings" element={<Settings />} />
+                <Route path="services" element={<ServicesSettings />} />
                 <Route path="design" element={<DesignSettings />} />
                 <Route path="footer" element={<FooterSettings />} />
                 <Route path="logs" element={<SystemLogs />} />

@@ -1,0 +1,159 @@
+/* Public portal styles are scoped independently from the CMS workspace. */
+:root { --lash-ink:#171717; --lash-paper:#f8f6f2; --lash-muted:#79766f; --lash-line:#e3e0d9; }
+html { scroll-behavior:smooth; scroll-padding-top:110px; }
+.lash-site { color:var(--lash-ink); background:var(--lash-paper); font-family:Inter,sans-serif; }
+.lash-container { width:min(1240px, calc(100% - 96px)); margin-inline:auto; }
+.lash-site h1,.lash-site h2,.lash-site h3,.lash-brand strong,.footer-brand { font-family:'Cormorant Garamond',Georgia,serif; font-weight:400; }
+.lash-site h2 { font-size:clamp(38px,4vw,60px); line-height:1.1; letter-spacing:-1.8px; }
+.lash-site h2 em,.lash-site h1 em { color:#8c8173; font-weight:400; }
+.lash-site p { line-height:1.85; }
+.lash-site a,.lash-header a,.lash-footer a { transition:color .2s,background .2s,transform .2s; }
+.lash-site a:focus-visible,.lash-header a:focus-visible,.lash-footer a:focus-visible,.lash-site button:focus-visible,.menu-toggle:focus-visible { outline:2px solid #9b8262; outline-offset:5px; }
+.lash-header { background:#f8f6f2f5; color:#171717; border-bottom:1px solid var(--lash-line); z-index:100; }
+.lash-header.is-sticky { position:sticky; top:0; backdrop-filter:blur(16px); }
+.header-inner { min-height:102px; display:flex; align-items:center; justify-content:space-between; gap:30px; }
+.lash-brand { display:flex; align-items:center; gap:15px; flex-shrink:0; }
+.brand-monogram { font-family:'Cormorant Garamond',Georgia,serif; font-size:28px; width:49px; height:49px; display:grid; place-items:center; border:1px solid #bbb4a8; border-radius:50%; letter-spacing:-3px; padding-right:3px; }
+.lash-brand strong { display:block; font-size:25px; line-height:1.1; }
+.lash-brand small { display:block; font-size:8px; letter-spacing:3.8px; text-transform:uppercase; margin-top:7px; }
+.lash-nav { display:flex; gap:26px; align-items:center; }
+.lash-nav a { font-size:11px; color:#716e67; padding:9px 0; }
+.lash-nav a:hover,.lash-nav a[aria-current] { color:#171717; }
+.lash-nav a[aria-current] { border-bottom:1px solid #171717; }
+.header-actions { display:flex; gap:12px; align-items:center; }
+.lash-button { display:inline-flex; gap:25px; align-items:center; justify-content:center; background:var(--color-primary,#171717); color:white; font-size:12px; padding:20px 26px; border:1px solid var(--color-primary,#171717); }
+.lash-button:hover { background:#45413b; transform:translateY(-2px); }
+.lash-button.button-small { font-size:10px; padding:14px 19px; gap:16px; }
+.menu-toggle { display:none; background:transparent; border:0; padding:8px; color:#171717; }
+.lash-hero { overflow:hidden; }
+.hero-grid { display:grid; grid-template-columns:1.05fr 1fr; gap:75px; padding-top:62px; padding-bottom:55px; align-items:center; }
+.eyebrow { font-size:9px; letter-spacing:2.4px; text-transform:uppercase; display:flex; align-items:center; gap:10px; line-height:1.8; color:#797266; }
+.eyebrow>span { height:5px; width:5px; border-radius:50%; background:#8c8173; }
+.hero-copy h1 { font-size:clamp(70px,7.6vw,110px); line-height:.99; letter-spacing:-4px; margin:31px 0 27px; }
+.hero-copy>p { font-size:13px; color:#78746e; max-width:360px; }
+.hero-buttons { display:flex; align-items:center; gap:26px; margin-top:34px; }
+.text-link { display:inline-flex; align-items:center; gap:15px; font-size:11px; color:inherit; }
+.text-link:hover { color:#99856a; }
+.hero-buttons .text-link { font-size:10px; }
+.hero-note { display:flex; gap:13px; align-items:center; margin-top:44px; color:#777269; font-size:10px; line-height:1.9; }
+.hero-note strong { font-weight:400; color:#39362f; }
+.note-star { font-family:Georgia,serif; font-size:37px; color:#a69b89; }
+.hero-visual { position:relative; padding-right:23px; }
+.image-frame { position:relative; height:550px; background:#c4bbb0; border-radius:180px 180px 0 0; overflow:hidden; }
+.image-frame img { width:100%; height:100%; object-fit:cover; object-position:center 36%; filter:saturate(.45); }
+.image-shade { position:absolute; inset:0; background:linear-gradient(0deg,#101010b8,transparent 55%); }
+.image-caption { position:absolute; bottom:34px; left:35px; color:#fff; }
+.image-caption>span { font-size:8px; letter-spacing:3px; }
+.image-caption p { font-family:'Cormorant Garamond',Georgia,serif; font-size:31px; font-style:italic; margin-top:5px; }
+.illustrative-label { position:absolute; right:14px; bottom:14px; font-size:8px; color:#ffffffb0; }
+.vertical-caption { position:absolute; right:0; top:42%; writing-mode:vertical-rl; font-size:8px; letter-spacing:3px; color:#8d877d; }
+.hero-seal { width:107px; height:107px; border-radius:50%; background:#eee8dd; position:absolute; bottom:55px; left:-51px; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:8px; letter-spacing:1.5px; border:5px solid var(--lash-paper); }
+.hero-seal span { font-family:'Cormorant Garamond',serif; font-size:27px; font-style:italic; line-height:1.1; letter-spacing:0; }
+.hero-seal svg { margin-top:7px; }
+.hero-bottom { display:flex; align-items:center; justify-content:space-between; font-size:8px; letter-spacing:1.8px; color:#878076; border-top:1px solid var(--lash-line); padding:22px 0; }
+.hero-bottom a { letter-spacing:0; font-size:10px; color:#575148; display:flex; align-items:center; gap:22px; }
+.lash-ribbon { display:flex; align-items:center; justify-content:space-around; gap:25px; background:#171717; color:#c6bbaa; padding:25px 35px; font-size:18px; overflow:hidden; }
+.lash-ribbon span { font-size:9px; letter-spacing:2.5px; white-space:nowrap; }
+.techniques-section,.portfolio-section,.journal-section { padding-top:96px; padding-bottom:86px; }
+.section-heading { display:flex; justify-content:space-between; gap:45px; align-items:end; margin-bottom:38px; }
+.section-heading h2 { margin-top:17px; }
+.section-heading>p { max-width:290px; font-size:12px; color:#7b766e; }
+.technique-grid { display:grid; grid-template-columns:repeat(3,1fr); border:1px solid var(--lash-line); }
+.technique-card { padding:34px; border-right:1px solid var(--lash-line); }
+.technique-card:last-child { border-right:0; }
+.technique-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:39px; color:#8c8173; }
+.technique-top span { font-size:10px; color:#aaa094; }
+.technique-card small { font-size:8px; letter-spacing:1.8px; color:#898172; }
+.technique-card h3 { font-size:30px; margin:9px 0 12px; line-height:1.15; }
+.technique-card p { font-size:11px; color:#78736c; min-height:70px; }
+.technique-card .text-link { margin-top:25px; }
+.section-footnote { font-size:9px; color:#8c857b; padding-top:17px; }
+.about-strip { background:#ede9e1; padding:78px 0; }
+.about-grid { display:grid; grid-template-columns:1fr 1fr; gap:95px; align-items:center; }
+.about-art { background:#181818; aspect-ratio:1.22; position:relative; display:flex; justify-content:center; align-items:center; flex-direction:column; overflow:hidden; }
+.about-art:before,.about-art:after { content:''; position:absolute; border:1px solid #4c473e; width:65%; height:120%; border-radius:50%; transform:rotate(40deg); }
+.about-art:after { transform:rotate(-40deg); }
+.about-art>span { font-family:'Cormorant Garamond',serif; font-size:150px; font-style:italic; letter-spacing:-15px; color:#d5cbb9; z-index:1; }
+.about-art small { z-index:1; color:#a99b85; font-size:7px; letter-spacing:2.6px; }
+.about-grid h2 { margin:18px 0 24px; }
+.about-grid p { font-size:12px; color:#777067; margin-bottom:18px; }
+.about-grid .text-link { margin-top:15px; }
+.work-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:25px; }
+.work-card img,.journal-card img { width:100%; aspect-ratio:4/4.5; object-fit:cover; }
+.work-placeholder { aspect-ratio:4/4.5; background:#e8e1d6; display:grid; place-items:center; color:#a39682; }
+.work-card>div:last-child { display:flex; align-items:center; justify-content:space-between; padding:18px 0; gap:15px; }
+.work-card h3,.journal-card h3 { font-size:29px; line-height:1.2; }
+.journal-card img { aspect-ratio:1.4; margin-bottom:20px; }
+.journal-card small { font-size:8px; letter-spacing:2px; color:#8b8071; }
+.journal-card h3 { margin:12px 0; }
+.journal-card p { font-size:12px; color:#7a746c; margin-bottom:15px; }
+.portfolio-empty { border-top:1px solid var(--lash-line); border-bottom:1px solid var(--lash-line); padding:35px 0; display:flex; align-items:center; gap:30px; color:#8a8070; }
+.portfolio-empty h3 { font-size:28px; color:#292621; }
+.portfolio-empty p { font-size:11px; }
+.portfolio-empty .text-link { margin-left:auto; white-space:nowrap; }
+.faq-section { padding:30px 0 95px; display:grid; grid-template-columns:1fr 1.25fr; gap:80px; }
+.faq-section h2 { margin-top:19px; }
+.faq-item { border-bottom:1px solid var(--lash-line); }
+.faq-item:first-child { border-top:1px solid var(--lash-line); }
+.faq-item button { width:100%; display:flex; justify-content:space-between; align-items:center; gap:24px; padding:24px 0; text-align:left; background:transparent; font-family:Inter,sans-serif; font-size:12px; }
+.faq-item p { font-size:12px; color:#797269; padding-bottom:22px; padding-right:30px; }
+.booking-banner { background:#e8e1d6; text-align:center; padding:66px 30px; position:relative; overflow:hidden; margin-bottom:85px; }
+.booking-banner .eyebrow { justify-content:center; }
+.booking-banner h2 { margin:20px 0 27px; font-size:64px; }
+.booking-decoration { font-size:270px; position:absolute; right:7%; top:5px; color:#a996761f; pointer-events:none; }
+.lash-footer { color:#a29b90; background:#151515; padding:55px 0 22px; font-family:Inter,sans-serif; }
+.footer-top { display:flex; align-items:center; justify-content:space-between; gap:30px; padding-bottom:36px; }
+.footer-brand { color:#e5ddcf; font-size:32px; }
+.footer-brand span { display:block; font-family:Inter,sans-serif; font-size:7px; letter-spacing:4px; margin-top:9px; }
+.footer-top p { font-size:10px; margin-top:16px; }
+.footer-top>.text-link { color:#e0d5c2; }
+.footer-links { display:flex; justify-content:space-between; gap:25px; padding:25px 0; border-top:1px solid #30302d; }
+.footer-links nav,.footer-links>div { display:flex; align-items:center; gap:25px; font-size:10px; flex-wrap:wrap; }
+.footer-links a { display:inline-flex; gap:8px; align-items:center; }
+.footer-bottom { display:flex; justify-content:space-between; gap:20px; padding-top:23px; border-top:1px solid #30302d; font-size:8px; }
+.footer-bottom>span:last-child { letter-spacing:1.5px; }
+.inner-page { padding:75px 0 100px; min-height:65vh; }
+.inner-page>.eyebrow { margin-bottom:20px; }
+.inner-page h1 { font-size:clamp(52px,6vw,82px); line-height:1.05; margin-bottom:25px; letter-spacing:-2px; }
+.inner-intro { max-width:620px; color:#7b746a; font-size:14px; margin-bottom:45px; }
+.content-state { border:1px solid var(--lash-line); padding:45px; color:#746b5e; font-size:13px; }
+.content-state a { margin-top:18px; }
+.booking-layout { max-width:760px; margin:auto; text-align:center; padding:25px 0; }
+.booking-layout .eyebrow { justify-content:center; }
+.booking-layout>p { max-width:530px; margin:25px auto; color:#7b746a; font-size:14px; }
+.booking-steps { display:grid; grid-template-columns:repeat(3,1fr); gap:25px; padding:35px 0; margin-bottom:25px; border-block:1px solid var(--lash-line); text-align:left; }
+.booking-steps span { font-size:10px; color:#92846f; }
+.booking-steps h2 { font-size:26px; margin:12px 0; letter-spacing:-.5px; }
+.booking-steps p { font-size:11px; color:#7b746a; }
+.about-page { max-width:800px; }
+.about-page .about-quote { font-family:'Cormorant Garamond',serif; font-size:32px; color:#8c8173; margin:35px 0; line-height:1.4; }
+.about-page .cms-content { font-size:15px; line-height:1.9; margin-bottom:30px; }
+.about-page .cms-content p { margin-bottom:20px; }
+.about-page>img { width:100%; max-height:500px; object-fit:cover; margin-bottom:30px; }
+@media(min-width:1500px) { .hero-grid { padding-top:80px; padding-bottom:70px; } }
+@media(max-width:1100px) { .lash-container { width:calc(100% - 56px); } .lash-nav { gap:16px; } .lash-brand strong { font-size:22px; } .hero-grid { gap:45px; } .hero-copy h1 { font-size:80px; } .hero-buttons { flex-wrap:wrap; gap:20px; } .image-frame { height:520px; } .technique-card { padding:25px; } .about-grid { gap:50px; } }
+@media(max-width:850px) { .header-inner { min-height:84px; } .menu-toggle { display:block; } .lash-nav { display:none; position:absolute; top:84px; left:0; right:0; padding:25px 30px; background:#f8f6f2; border-bottom:1px solid var(--lash-line); box-shadow:0 20px 30px #0000000d; } .lash-nav.is-open { display:flex; align-items:stretch; flex-direction:column; gap:10px; } .lash-nav a { font-size:14px; } .lash-header { position:relative; } .hero-grid { gap:36px; } .hero-copy h1 { font-size:65px; } .image-frame { height:470px; } .hero-seal { width:85px; height:85px; left:-25px; bottom:45px; } .hero-seal span { font-size:23px; } .hero-bottom>span:last-child { display:none; } .hero-note { margin-top:28px; } .hero-copy>p { font-size:12px; } .technique-grid { grid-template-columns:1fr; } .technique-card { border-right:0; border-bottom:1px solid var(--lash-line); display:grid; grid-template-columns:1fr 1fr; gap:8px 35px; } .technique-card:last-child { border-bottom:0; } .technique-top { grid-row:span 3; margin:0; } .technique-card p { min-height:0; } .technique-card .text-link { grid-column:2; margin:10px 0; } .work-grid { gap:20px; grid-template-columns:repeat(2,1fr); } .faq-section { gap:40px; } .footer-bottom>span:last-child { display:none; } .lash-ribbon { justify-content:start; gap:30px; } }
+@media(max-width:600px) { .lash-container { width:calc(100% - 40px); } .lash-brand { gap:10px; } .lash-brand strong { font-size:22px; } .brand-monogram { width:37px; height:37px; font-size:23px; } .lash-brand small { font-size:7px; letter-spacing:2.7px; } .header-actions .lash-button { display:none; } .hero-grid { grid-template-columns:1fr; padding-top:38px; gap:42px; padding-bottom:30px; } .hero-copy h1 { font-size:77px; margin:25px 0; } .hero-copy>p { max-width:330px; font-size:13px; } .hero-buttons { gap:22px; margin-top:27px; } .hero-buttons .lash-button { padding:17px 20px; font-size:11px; gap:15px; } .hero-buttons .text-link { font-size:9px; gap:8px; } .hero-note { margin-top:25px; } .hero-visual { margin-left:20px; padding-right:20px; } .image-frame { height:470px; border-radius:160px 160px 0 0; } .hero-seal { left:-23px; bottom:43px; width:92px; height:92px; } .hero-bottom { padding:20px 0; } .hero-bottom>span { font-size:7px; letter-spacing:1px; } .hero-bottom a { font-size:8px; gap:10px; } .lash-ribbon { padding:19px 20px; gap:23px; } .lash-ribbon span { font-size:8px; } .techniques-section,.portfolio-section,.journal-section { padding-top:60px; padding-bottom:55px; } .section-heading { display:block; margin-bottom:30px; } .section-heading h2 { margin-top:14px; } .section-heading>p,.section-heading>.text-link { margin-top:20px; } .technique-card { display:block; padding:26px; } .technique-top { margin-bottom:23px; } .technique-card h3 { font-size:33px; } .technique-card p { font-size:12px; } .technique-card .text-link { margin-top:23px; } .about-strip { padding:45px 0; } .about-grid { grid-template-columns:1fr; gap:35px; } .about-art { aspect-ratio:1.5; } .about-art>span { font-size:125px; } .portfolio-empty { align-items:start; flex-wrap:wrap; gap:20px; padding:28px 0; } .portfolio-empty>div { flex:1; } .portfolio-empty h3 { font-size:25px; } .portfolio-empty>.text-link { margin-left:60px; } .work-grid { grid-template-columns:1fr; gap:35px; } .faq-section { grid-template-columns:1fr; gap:30px; padding:10px 0 55px; } .booking-banner { padding:45px 22px; margin-bottom:50px; } .booking-banner h2 { font-size:52px; } .booking-decoration { right:-70px; top:0; } .footer-top { align-items:start; flex-direction:column; gap:25px; } .footer-links { flex-direction:column; gap:22px; } .footer-bottom { line-height:1.8; } .footer-bottom>a { white-space:nowrap; } .inner-page { padding:50px 0 65px; } .booking-steps { grid-template-columns:1fr; gap:27px; padding:27px 0; } .booking-steps h2 { margin:6px 0; } .content-state { padding:27px; } }
+@media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } .lash-site *, .lash-header * { transition:none!important; animation:none!important; } }
+/* Black is the primary brand surface; warm paper provides reading contrast. */
+.lash-header { background:#151515f5; color:#eee7dc; border-color:#33312d; }
+.lash-brand strong,.lash-nav a[aria-current],.lash-nav a:hover { color:#eee7dc; }
+.lash-brand small { color:#a69c8d; }
+.brand-monogram { border-color:#726958; color:#dfd1ba; }
+.lash-nav a { color:#b2a99d; }
+.lash-nav a[aria-current] { border-color:#c3b397; }
+.lash-header .lash-button { background:#e2d7c3; border-color:#e2d7c3; color:#191816; }
+.menu-toggle { color:#e2d7c3; }
+.lash-hero { background:#151515; }
+.hero-copy h1 { color:#f4eee5; }
+.hero-copy h1 em { color:#c4b295; }
+.hero-copy>p { color:#aaa298; }
+.lash-hero .eyebrow { color:#b5a68f; }
+.lash-hero .lash-button { background:#e2d7c3; border-color:#e2d7c3; color:#171717; }
+.lash-hero .text-link { color:#d7ccbb; }
+.hero-note,.hero-note strong { color:#ada394; }
+.hero-seal { border-color:#151515; }
+.hero-bottom { border-color:#38332c; color:#9d9384; }
+.hero-bottom a { color:#c9bead; }
+.lash-ribbon { background:#e4dbcc; color:#6f614c; }
+@media(max-width:850px) { .lash-nav { background:#151515; border-color:#39332a; } }
